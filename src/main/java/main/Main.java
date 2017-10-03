@@ -1,6 +1,8 @@
 package fr.whyt.pubg.main;
 
-import fr.whyt.pubg.inout.Parser;
+import fr.whyt.pubg.inout.ParserCIS;
+import fr.whyt.pubg.inout.ParsingException;
+import fr.whyt.pubg.inout.WriterCIS;
 import fr.whyt.pubg.inout.cis.CustomInputSettings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,16 +26,23 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(ClassLoader.getSystemResource("sample.fxml"));
+        Parent root = FXMLLoader.load(ClassLoader.getSystemResource("main.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
 
-        CustomInputSettings cis = Parser.processCustomInputSettings("");
+        try {
+            CustomInputSettings cis = ParserCIS.serialize("");
+            System.out.println(WriterCIS.deserialize(cis));
+        } catch (ParsingException e) {
+            e.printStackTrace();
+            Parent exception = FXMLLoader.load(ClassLoader.getSystemResource("exception.fxml"));
+        }
     }
 
 
     public static void main(String[] args) {
         launch(args);
     }
+    
 }
