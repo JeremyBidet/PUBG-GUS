@@ -72,7 +72,11 @@ public class CustomInputSettings {
 
     @Override
     public String toString() {
-        return "CustomInputSettings{" + "actionKeyList=" + actionKeyList + ", axisKeyList=" + axisKeyList + ", mouseSensitiveList=" + mouseSensitiveList + ", bInvertMouse=" + bInvertMouse + '}';
+        return "CustomInputSettings{" +
+                       "\n\tactionKeyList=" + actionKeyList + "," +
+                       "\n\taxisKeyList=" + axisKeyList + "," +
+                       "\n\tmouseSensitiveList=" + mouseSensitiveList + "," +
+                       "\n\tbInvertMouse=" + bInvertMouse + '}';
     }
 
 }

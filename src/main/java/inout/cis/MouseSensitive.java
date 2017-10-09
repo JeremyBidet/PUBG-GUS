@@ -44,7 +44,9 @@ public class MouseSensitive {
 
     @Override
     public String toString() {
-        return "MouseSensitive{" + "mouseSensitiveName='" + mouseSensitiveName + '\'' + ", lastConvertedMouseSensitivity=" + lastConvertedMouseSensitivity + '}';
+        return "\n\t\tMouseSensitive{" +
+                       "\n\t\t\tmouseSensitiveName='" + mouseSensitiveName + '\'' + "," +
+                       "\n\t\t\tlastConvertedMouseSensitivity=" + lastConvertedMouseSensitivity + '}';
     }
 
 }

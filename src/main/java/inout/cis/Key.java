@@ -58,7 +58,7 @@ public class Key {
 
     @Override
     public String toString() {
-        return "Key{" + "key='" + key + '\'' + ", bCtrl=" + bCtrl + ", bAlt=" + bAlt + '}';
+        return "\n\t\t\t\tKey{" + "key='" + key + '\'' + ", bCtrl=" + bCtrl + ", bAlt=" + bAlt + '}';
     }
 
 }

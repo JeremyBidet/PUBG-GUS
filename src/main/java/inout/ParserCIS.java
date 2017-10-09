@@ -25,7 +25,7 @@ public class ParserCIS {
     private static Pattern p_name                          = Pattern.compile("[a-zA-Z0-9_<\\-]");
     // Common regex
     private static Pattern p_Key                           = Pattern.compile("\\((Key=(" + p_keyboard + "+)(,((bCtrl=(" + p_boolean + "))|(bAlt=(" + p_boolean + "))))?)?\\)");
-    private static Pattern p_Keys                          = Pattern.compile("Keys=(\\((" + p_Key + ")(,(" + p_Key + ")(,(" + p_Key + "))?)?\\))");
+    private static Pattern p_Keys                          = Pattern.compile("Keys=\\((" + p_Key + ")(,(" + p_Key + ")(,(" + p_Key + "))?)?\\)");
     // ActionKeyList regex
     private static Pattern p_ActionName                    = Pattern.compile("ActionName=\"(" + p_name + "+)\"");
     private static Pattern p_ActionKey                     = Pattern.compile("\\((" + p_ActionName + "," + p_Keys + ")\\)");
@@ -47,7 +47,7 @@ public class ParserCIS {
     
     // previous patterns but with Named-Capturing Groups
     private static Pattern p_Key_withNCG                           = Pattern.compile("\\((Key=(?<Key>" + p_keyboard + "+)(,((bCtrl=(?<bCtrl>" + p_boolean + "))|(bAlt=(?<bAlt>" + p_boolean + "))))?)?\\)");
-    private static Pattern p_Keys_withNCG                          = Pattern.compile("Keys=(?<Keys>\\((" + p_Key + ")(,(" + p_Key + ")(,(" + p_Key + "))?)?\\))");
+    private static Pattern p_Keys_withNCG                          = Pattern.compile("Keys=\\((?<Keys>(" + p_Key + ")(,(" + p_Key + ")(,(" + p_Key + "))?)?)\\)");
     private static Pattern p_ActionName_withNCG                    = Pattern.compile("ActionName=\"(?<ActionName>" + p_name + "+)\"");
     private static Pattern p_ActionKey_withNCG                     = Pattern.compile("\\((?<ActionKey>" + p_ActionName_withNCG + "," + p_Keys_withNCG + ")\\)");
     private static Pattern p_Scale_withNCG                         = Pattern.compile("Scale=(?<Scale>" + p_float + ")");
@@ -62,7 +62,7 @@ public class ParserCIS {
         if(verbose) {
             System.out.println("Retreiving Action Key List...");
         }
-        if(!p_ActionKeyList.matcher(source_ActionKeyList).matches()) {
+        if(!p_ActionKeyList.matcher("ActionKeyList=(" + source_ActionKeyList + ")").matches()) {
             if(verbose) {
                 System.out.println("The Action Key List does not match with the expected format!");
             }
@@ -76,7 +76,7 @@ public class ParserCIS {
                 System.out.println("`tExtracting Action Key: " + actionName + "...");
             }
             String result_Keys = m.group("Keys");
-            if(!p_Keys.matcher(result_Keys).matches()) {
+            if(!p_Keys.matcher("Keys=(" + result_Keys + ")").matches()) {
                 if(verbose) {
                     System.out.println("The Keys in the Action Key List does not match with the expected format!");
                 }
@@ -103,7 +103,7 @@ public class ParserCIS {
         if(verbose) {
             System.out.println("Retreiving Axis Key List...");
         }
-        if(!p_AxisKeyList.matcher(source_AxisKeyList).matches()) {
+        if(!p_AxisKeyList.matcher("AxisKeyList=(" + source_AxisKeyList + ")").matches()) {
             if(verbose) {
                 System.out.println("The Axis Key List does not match with the expected format!");
             }
@@ -118,7 +118,7 @@ public class ParserCIS {
                 System.out.println("`tExtracting Axis Key: " + axisName + "...");
             }
             String result_Keys = m.group("Keys");
-            if(!p_Keys.matcher(result_Keys).matches()) {
+            if(!p_Keys.matcher("Keys=(" + result_Keys + ")").matches()) {
                 if(verbose) {
                     System.out.println("The Keys in the Axis Key List does not match with the expected format!");
                 }
@@ -145,7 +145,7 @@ public class ParserCIS {
         if(verbose) {
             System.out.println("Retreiving Mouse Sensitive List...");
         }
-        if(!p_MouseSensitiveList.matcher(source_MouseSensitiveList).matches()) {
+        if(!p_MouseSensitiveList.matcher("MouseSensitiveList=(" + source_MouseSensitiveList + ")").matches()) {
             if(verbose) {
                 System.out.println("The Mouse Sensitive List does not match with the expected format!");
             }
@@ -168,27 +168,10 @@ public class ParserCIS {
     }
 
     public static CustomInputSettings serialize(String source) throws ParsingException {
-        if(verbose) {
-            System.out.println("Using pattern:");
-            System.out.println(p_CustomInputSettings);
-            System.out.println();
-            System.out.println("Using source:");
-            System.out.println(source);
-            System.out.println();
-        }
-        if(verbose) {
-            System.out.println("Processing...");
-        }
-        // Stop application if source does not match the global regex
-        Matcher m = p_CustomInputSettings.matcher(source);
-        if(!m.matches()) {
-            if(verbose) {
-                System.out.println("The Custom Input Settings does not match with the expected format!");
-                System.out.println("Stopping...");
-            }
+        if(!check(source))
             throw new ParsingException("The Custom Input Settings does not match with the expected format!", source, p_CustomInputSettings);
-        }
-
+        Matcher m = p_CustomInputSettings.matcher(source);
+        m.matches();
         if(verbose) {
             System.out.println("Extracting matches results from source...");
         }
@@ -207,5 +190,29 @@ public class ParserCIS {
         }
         return cis;
     }
-
+    
+    public static boolean check(String source) throws ParsingException {
+        if(verbose) {
+            System.out.println("Using pattern:");
+            System.out.println(p_CustomInputSettings);
+            System.out.println();
+            System.out.println("Using source:");
+            System.out.println(source);
+            System.out.println();
+        }
+        if(verbose) {
+            System.out.println("Processing...");
+        }
+        // Stop application if source does not match the global regex
+        Matcher m = p_CustomInputSettings.matcher(source);
+        if(!m.matches()) {
+            if(verbose) {
+                System.out.println("The Custom Input Settings does not match with the expected format!");
+                System.out.println("Stopping...");
+            }
+            return false;
+        }
+        return true;
+    }
+    
 }

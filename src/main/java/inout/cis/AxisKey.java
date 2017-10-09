@@ -56,7 +56,9 @@ public class AxisKey {
 
     @Override
     public String toString() {
-        return "AxisKey{" + "scale='" + scale + '\'' + ", axisName='" + axisName + '\'' + ", keys=" + keys + '}';
+        return "\n\t\tAxisKey{" +
+                       "\n\t\t\tscale='" + scale + '\'' + "," +
+                       "\n\t\t\taxisName='" + axisName + '\'' + ", keys=" + keys + '}';
     }
 
 }

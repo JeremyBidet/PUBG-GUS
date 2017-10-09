@@ -46,7 +46,9 @@ public class ActionKey {
 
     @Override
     public String toString() {
-        return "ActionKey{" + "actionName='" + actionName + '\'' + ", keys=" + keys + '}';
+        return "\n\t\tActionKey{" +
+                       "\n\t\t\tactionName='" + actionName + '\'' + "," +
+                       "\n\t\t\tkeys=" + keys + '}';
     }
 
 }
