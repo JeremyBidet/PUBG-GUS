@@ -1,4 +1,4 @@
-package fr.whyt.pubg.inout.cis;
+package fr.whyt.pubg.deprecated.parser.data;
 
 public class MouseSensitive {
 

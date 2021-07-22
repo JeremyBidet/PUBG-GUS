@@ -1,0 +1,116 @@
+=====
+RULES
+=====
+-------------
+ActionKeyList
+-------------
+(
+	ActionName="%s",
+	Keys=(
+		([Key=%s][,b{Alt|Ctrl|Shift}=True])
+		[,([Key=%s][,b{Alt|Ctrl|Shift}=True])]{0..2}
+	)
+)
+
+-----------
+AxisKeyList
+-----------
+(
+	AxisName="%s",
+	Scale=%f,
+	Keys=(
+		([Key=%s][,b{Alt|Ctrl|Shift}=True])
+		[,([Key=%s][,b{Alt|Ctrl|Shift}=True])]{0..2}
+	)
+)
+
+------------
+SensitiveMap
+------------
+(
+	SensitiveName="%s",
+	Sensitivity=%f,
+	LastConvertedSensitivity=%f
+)
+
+
+=============
+REGEX - PARSE
+=============
+
+-------------
+ActionKeyList
+-------------
+\(ActionName="[\w \-]+",Keys=\((\((Key=.+)?(,b(Alt|Ctrl|Shift)=True)?\)(,\((Key=.+)?(,b(Alt|Ctrl|Shift)=True)?\)){0,2}\))\)
+
+-----------
+AxisKeyList
+-----------
+\(AxisName="[\w\-]+",Scale=-?\d+(\.\d+)?,Keys=\(\((Key=.+)?(,b(Alt|Ctrl|Shift)=True)?\)(,\((Key=.+)?(,b(Alt|Ctrl|Shift)=True)?\)){0,2}\)\)
+
+------------
+SensitiveMap
+------------
+\(SensitiveName="[\w\-]+",Sensitivity=-?\d+(\.\d+)?,LastConvertedSensitivity=-?\d+(\.\d+)?\)
+
+
+==============
+REGEX - FORMAT
+==============
+
+-------------
+ActionKeyList
+-------------
+\((ActionName="\w+"),Keys=\((\(Key=\w+,b(Alt|Ctrl|Shift)=True\)),\(\),(\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t$2,\n\t\t\t\t(),\n\t\t\t\t$4\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\((\(Key=\w+\)),\(\),(\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t$2,\n\t\t\t\t(),\n\t\t\t\t$3\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\(\(\),\(\),(\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t(),\n\t\t\t\t(),\n\t\t\t\t$2\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\((\(Key=\w+\)),(\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t$2,\n\t\t\t\t$3\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\((\(Key=\w+\)),\(\)\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t$2,\n\t\t\t\t()\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\(\(\),\(\)\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t(),\n\t\t\t\t()\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\(\(\),(\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t(),\n\t\t\t\t$2\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\((\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t$2\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\(\(\)\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t()\n\t\t\t)\n\t\t)
+
+\((ActionName="\w+"),Keys=\((\(Key=\w+,b(Alt|Ctrl|Shift)=True\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\tKeys=(\n\t\t\t\t$2\n\t\t\t)\n\t\t)
+
+-----------
+AxisKeyList
+-----------
+\((AxisName="\w+"),(Scale=-?\d+\.\d+),Keys=\((\(Key=\w+\)),\(\),(\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\t$2,\n\t\t\tKeys=(\n\t\t\t\t$3,\n\t\t\t\t(),\n\t\t\t\t$4\n\t\t\t)\n\t\t)
+
+\((AxisName="\w+"),(Scale=-?\d+\.\d+),Keys=\(\(\),\(\),(\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\t$2,\n\t\t\tKeys=(\n\t\t\t\t(),\n\t\t\t\t(),\n\t\t\t\t$3\n\t\t\t)\n\t\t)
+
+\((AxisName="\w+"),(Scale=-?\d+\.\d+),Keys=\((\(Key=\w+\)),\(\)\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\t$2,\n\t\t\tKeys=(\n\t\t\t\t$3,\n\t\t\t\t()\n\t\t\t)\n\t\t)
+
+\((AxisName="\w+"),(Scale=-?\d+\.\d+),Keys=\((\(Key=\w+\))\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\t$2,\n\t\t\tKeys=(\n\t\t\t\t$3\n\t\t\t)\n\t\t)
+
+\((AxisName="\w+"),(Scale=-?\d+\.\d+),Keys=\(\(\)\)\)
+\n\t\t(\n\t\t\t$1,\n\t\t\t$2,\n\t\t\tKeys=(\n\t\t\t\t()\n\t\t\t)\n\t\t)
+
+------------
+SensitiveMap
+------------
+\((SensitiveName="\w+"),(Sensitivity=\d+\.\d+),(LastConvertedSensitivity=\d+\.\d+)\)
+\n\t\t\t\t\t(\n\t\t\t\t\t\t$1,\n\t\t\t\t\t\t$2,\n\t\t\t\t\t\t$3\n\t\t\t\t\t)
