@@ -7,7 +7,7 @@ import fr.whyt.pubg.utils.annotations.Identity;
 public class Key extends ClassHelper {
 	
 	@Identity
-	@Property(name = "Key")
+	@Property(name = "Key", raw = true)
 	public String key;
 	
 	@Identity

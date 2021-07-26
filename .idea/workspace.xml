@@ -8,60 +8,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="rebase to f8f203ab2059fcd504f676536986691d667aba1e">
-      <change afterPath="$PROJECT_DIR$/.idea/artifacts/PUBG_GUS.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/lib.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/data/iniimpl/ActionKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/data/iniimpl/AxisKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/data/iniimpl/CustomInputSettings.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/data/iniimpl/Key.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/IniFile.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/ParserCIS.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/WriterCIS.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/data/ActionKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/data/ActionKeyList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/data/AxisKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/data/AxisKeyList.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/data/CustomInputSettings.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/data/Key.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/exceptions/ParsingException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/exceptions/WritingException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/inifile/annotations/Optional.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/inifile/annotations/Property.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/inifile/annotations/Root.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/inifile/core/IniFileMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/inifile/exceptions/ParsingException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/inifile/exceptions/WritingException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/ClassHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/ClassUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/ObjectHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/StringUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/annotations/Identity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/GameUserSettings_formatted.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/GameUserSettings_rules_n_regex.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/data/iniimpl/ActionKeyTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/inifile/core/IniFileMapperTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/inifile/core/IniFileRegexTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/utils/AssertionsHelper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/utils/ClassHelperTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/utils/ClassUtilsTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/utils/ObjectHelperTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/utils/StringUtilsTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/inifile/core/IniFileRegex.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/utils/Kind.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PUBG-GUS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/PUBG-GUS.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/ParserCIS.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/ParsingException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/WriterCIS.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/WritingException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/cis/ActionKey.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/cis/AxisKey.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/cis/CustomInputSettings.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/cis/Key.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/inout/cis/MouseSensitive.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/deprecated/parser/data/MouseSensitive.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/main/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/GameUserSettings.ini" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/GameUserSettings.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/data/iniimpl/Key.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/data/iniimpl/Key.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/inifile/core/IniFileMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/inifile/core/IniFileMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/utils/ClassUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/ClassUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/data/iniimpl/ActionKeyTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/data/iniimpl/ActionKeyTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/inifile/core/IniFileMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/inifile/core/IniFileMapperTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/inifile/core/IniFileRegexTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/inifile/core/IniFileRegexTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/utils/ClassUtilsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/utils/ClassUtilsTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/utils/ObjectHelperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/utils/ObjectHelperTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,6 +78,7 @@
         <option value="Tag Library Descriptor" />
         <option value="FxmlFile" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -165,8 +123,20 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="origin/master" />
+    <option name="OPTIONS">
+      <set>
+        <option value="INTERACTIVE" />
+      </set>
+    </option>
+  </component>
   <component name="Git.Settings">
-    <option name="UPDATE_CHANGES_POLICY" value="SHELVE" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitSEFilterConfiguration">
@@ -359,7 +329,7 @@
       <recent name="fr.whyt.pubg.io.cis" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ActionKeyTest.testSerialize">
+  <component name="RunManager" selected="JUnit.fr.whyt.pubg in PUBG-GUS">
     <configuration default="true" type="Applet" factoryName="Applet">
       <module />
       <option name="HTML_USED" value="false" />
@@ -402,17 +372,36 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ActionKeyTest.testDeserialize" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ClassUtilsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PUBG-GUS" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="fr.whyt.pubg.data.iniimpl.*" />
+          <option name="PATTERN" value="fr.whyt.pubg.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="fr.whyt.pubg.data.iniimpl" />
-      <option name="MAIN_CLASS_NAME" value="fr.whyt.pubg.data.iniimpl.ActionKeyTest" />
-      <option name="METHOD_NAME" value="testDeserialize(java.lang.String,fr.whyt.pubg.data.iniimpl.ActionKey)" />
+      <option name="PACKAGE_NAME" value="fr.whyt.pubg.utils" />
+      <option name="MAIN_CLASS_NAME" value="fr.whyt.pubg.utils.ClassUtilsTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ClassUtilsTest.testGetKind_class" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="PUBG-GUS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="fr.whyt.pubg.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="fr.whyt.pubg.utils" />
+      <option name="MAIN_CLASS_NAME" value="fr.whyt.pubg.utils.ClassUtilsTest" />
+      <option name="METHOD_NAME" value="testGetKind_class" />
       <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="TEST_SEARCH_SCOPE">
@@ -422,17 +411,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ActionKeyTest.testSerialize" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ClassUtilsTest.testGetKind_object" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PUBG-GUS" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="fr.whyt.pubg.data.iniimpl.*" />
+          <option name="PATTERN" value="fr.whyt.pubg.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="fr.whyt.pubg.data.iniimpl" />
-      <option name="MAIN_CLASS_NAME" value="fr.whyt.pubg.data.iniimpl.ActionKeyTest" />
-      <option name="METHOD_NAME" value="testSerialize(java.lang.String,fr.whyt.pubg.data.iniimpl.ActionKey)" />
+      <option name="PACKAGE_NAME" value="fr.whyt.pubg.utils" />
+      <option name="MAIN_CLASS_NAME" value="fr.whyt.pubg.utils.ClassUtilsTest" />
+      <option name="METHOD_NAME" value="testGetKind_object" />
       <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="TEST_SEARCH_SCOPE">
@@ -442,37 +431,17 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="IniFileRegexTest.testAllFail" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="ClassUtilsTest.testNewCollection" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="PUBG-GUS" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="fr.whyt.pubg.inifile.core.*" />
+          <option name="PATTERN" value="fr.whyt.pubg.utils.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="fr.whyt.pubg.inifile.core" />
-      <option name="MAIN_CLASS_NAME" value="fr.whyt.pubg.inifile.core.IniFileRegexTest" />
-      <option name="METHOD_NAME" value="testAllFail(java.util.regex.Pattern,java.util.List)" />
-      <option name="TEST_OBJECT" value="method" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="moduleWithDependencies" />
-      </option>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="RootTest.testRoot" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="PUBG-GUS" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="fr.whyt.pubg.inifile.annotations.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="fr.whyt.pubg.inifile.annotations" />
-      <option name="MAIN_CLASS_NAME" value="fr.whyt.pubg.inifile.annotations.RootTest" />
-      <option name="METHOD_NAME" value="testRoot" />
+      <option name="PACKAGE_NAME" value="fr.whyt.pubg.utils" />
+      <option name="MAIN_CLASS_NAME" value="fr.whyt.pubg.utils.ClassUtilsTest" />
+      <option name="METHOD_NAME" value="testNewCollection" />
       <option name="TEST_OBJECT" value="method" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="TEST_SEARCH_SCOPE">
@@ -538,11 +507,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.ActionKeyTest.testSerialize" />
-        <item itemvalue="JUnit.ActionKeyTest.testDeserialize" />
-        <item itemvalue="JUnit.IniFileRegexTest.testAllFail" />
         <item itemvalue="JUnit.fr.whyt.pubg in PUBG-GUS" />
-        <item itemvalue="JUnit.RootTest.testRoot" />
+        <item itemvalue="JUnit.ClassUtilsTest" />
+        <item itemvalue="JUnit.ClassUtilsTest.testGetKind_class" />
+        <item itemvalue="JUnit.ClassUtilsTest.testGetKind_object" />
+        <item itemvalue="JUnit.ClassUtilsTest.testNewCollection" />
       </list>
     </recent_temporary>
   </component>
@@ -705,13 +674,6 @@
     <MESSAGE value="rebase to f8f203ab2059fcd504f676536986691d667aba1e" />
     <option name="LAST_COMMIT_MESSAGE" value="rebase to f8f203ab2059fcd504f676536986691d667aba1e" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <watches-manager>
-      <configuration name="JUnit">
-        <watch expression="type.getNestMembers()" language="JAVA" />
-      </configuration>
-    </watches-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

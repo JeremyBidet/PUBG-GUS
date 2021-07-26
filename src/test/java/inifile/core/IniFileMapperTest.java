@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class IniFileMapperTest {
-
+	
 	private static class A {
 		@Property
 		public int integer;
@@ -31,7 +31,7 @@ public class IniFileMapperTest {
 			this.list = list;
 			this.b = b;
 		}
-		public A() {}
+		@SuppressWarnings("unused") public A() {}
 		
 		@Override
 		public boolean equals(Object o) {
@@ -56,7 +56,7 @@ public class IniFileMapperTest {
 			this.dooble = dooble;
 			this.character = character;
 		}
-		public B() {}
+		@SuppressWarnings("unused") public B() {}
 		
 		@Override
 		public boolean equals(Object o) {
@@ -81,7 +81,7 @@ public class IniFileMapperTest {
 			this.key = key;
 			this.list = list;
 		}
-		public C() {}
+		@SuppressWarnings("unused") public C() {}
 		
 		@Override
 		public boolean equals(Object o) {
@@ -95,7 +95,7 @@ public class IniFileMapperTest {
 	}
 	
 	@Test
-	public void testTo_simple() {
+	public void testDeserialize_simple() {
 		// given
 		final String provided1 = "integer=1";
 		final String provided2 = "integer=2,string=\"ok\"";
@@ -109,10 +109,10 @@ public class IniFileMapperTest {
 		final A expected4 = new A(4, null, true, Collections.emptyList(),new B(3.14, 'c'));
 		
 		// actual
-		final A actual1 = IniFileMapper.to(provided1, A.class);
-		final A actual2 = IniFileMapper.to(provided2, A.class);
-		final A actual3 = IniFileMapper.to(provided3, A.class);
-		final A actual4 = IniFileMapper.to(provided4, A.class);
+		final A actual1 = IniFileMapper.deserialize(provided1, A.class);
+		final A actual2 = IniFileMapper.deserialize(provided2, A.class);
+		final A actual3 = IniFileMapper.deserialize(provided3, A.class);
+		final A actual4 = IniFileMapper.deserialize(provided4, A.class);
 		
 		// assert
 		Assertions.assertEquals(expected1, actual1);
@@ -121,6 +121,7 @@ public class IniFileMapperTest {
 		Assertions.assertEquals(expected4, actual4);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testDeserializeList() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		// given
@@ -133,7 +134,7 @@ public class IniFileMapperTest {
 		final String provided7 = "((obj=\"a\",key=true),(obj=\"b\",key=false,list=(1,2,3)))";
 		
 		// expected
-		final List expected1 = Collections.emptyList();
+		final List<?> expected1 = Collections.emptyList();
 		final List<Integer> expected2 = List.of(1);
 		final List<Integer> expected3 = List.of(1, 2, 3, 4, 5);
 		final List<String> expected4 = List.of("str1", "str2", "str3");
@@ -146,7 +147,7 @@ public class IniFileMapperTest {
 		deserializeIterable.setAccessible(true);
 		
 		// actual
-		final List actual1 = (List) deserializeIterable.invoke(null, List.class, Integer.class, provided1, 0);
+		final List<?> actual1 = (List<?>) deserializeIterable.invoke(null, List.class, Integer.class, provided1, 0);
 		final List<Integer> actual2 = (List<Integer>) deserializeIterable.invoke(null,List.class, Integer.class, provided2, 0);
 		final List<Integer> actual3 = (List<Integer>) deserializeIterable.invoke(null,List.class, Integer.class, provided3, 0);
 		final List<String> actual4 = (List<String>) deserializeIterable.invoke(null,List.class, String.class, provided4, 0);
