@@ -21,6 +21,7 @@ public class ObjectHelper {
 		return getter.apply(object);
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static <T, U> U getOrDefault(final T object, final U backup, final List<Function<Object, Object>> getters) {
 		if(object == null) {
 			return backup;
@@ -32,6 +33,7 @@ public class ObjectHelper {
 		return (U) result;
 	}
 	
+	@SafeVarargs
 	public static <T, U> U getOrDefault(final T object, final U backup, final Function<Object, Object>... getters) {
 		return getOrDefault(object, backup, Arrays.stream(getters).collect(Collectors.toList()));
 	}

@@ -1,19 +1,19 @@
 package fr.whyt.pubg.inifile.exceptions;
 
-import fr.whyt.pubg.deprecated.parser.IniFile;
+import java.io.Serializable;
 
 public class WritingException extends Exception {
     
-    public final IniFile<? extends IniFile> serializable;
+    public final Serializable serializable;
     
     /**
      * Constructs a new exception with the specified detail message.
      *
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
-     * @param serializable the serializable class (implementing {@link IniFile})
+     * @param serializable the serializable class
      */
-    public WritingException(final String message, final IniFile<? extends IniFile> serializable) {
+    public WritingException(final String message, final Serializable serializable) {
         super(message);
         this.serializable = serializable;
     }

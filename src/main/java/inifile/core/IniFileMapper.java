@@ -56,13 +56,13 @@ public class IniFileMapper {
 		final File iniFile = absolutePath.toFile();
 		
 		if (!iniFile.exists()) {
-			throw new IOException("This file does not exists: " + absolutePath.toString());
+			throw new IOException("This file does not exists: " + absolutePath);
 		}
 		if (!iniFile.isFile()) {
-			throw new IOException("This file is not a file: " + absolutePath.toString());
+			throw new IOException("This file is not a file: " + absolutePath);
 		}
 		if (!iniFile.canRead()) {
-			throw new IOException("Cannot open and read this file: " + absolutePath.toString());
+			throw new IOException("Cannot open and read this file: " + absolutePath);
 		}
 		
 		if (Arrays.stream(type.getInterfaces()).noneMatch(i -> i.equals(Serializable.class))) {
@@ -390,6 +390,7 @@ public class IniFileMapper {
 		
 		final BinaryOperator<String> joiner = isRoot ? StringUtils::joinLN : StringUtils::joinComma;
 		
+		//noinspection UnnecessaryLocalVariable
 		final String data = Arrays.asList(object.getClass().getDeclaredFields()).stream()
 				.filter(f -> f.isAnnotationPresent(IniProperty.class))
 				.map(field -> {

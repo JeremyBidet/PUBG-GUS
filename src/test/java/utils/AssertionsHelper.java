@@ -8,10 +8,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings({"rawtypes", "ConstantConditions"})
 public class AssertionsHelper {
 	
-	private static String[] simpleTypes = { "Integer", "Double", "Long", "Boolean", "String" };
-	private static String[] iterableTypes = { "Iterable", "Collection", "List", "Set", "Map" };
+	private static final String[] simpleTypes = { "Integer", "Double", "Long", "Boolean", "String" };
+	private static final String[] iterableTypes = { "Iterable", "Collection", "List", "Set", "Map" };
 	
 	public static void assertObjectEquals(final Object expected, final Object actual) {
 		final List<Field> expectedFields = Arrays.stream(expected.getClass().getFields()).collect(Collectors.toList());

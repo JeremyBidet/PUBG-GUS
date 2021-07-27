@@ -8,11 +8,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+@SuppressWarnings({"rawtypes", "unchecked", "ConstantConditions"})
 public class ClassUtilsTest {
 	
 	private static class A {
-		final int anInt = 1;
-		final boolean aBoolean = true;
 	}
 	
 	@Test
@@ -22,7 +21,7 @@ public class ClassUtilsTest {
 		final Class doubleProvided = double.class;
 		final Class booleanProvided = Boolean.class;
 		final Class stringProvided = String.class;
-		final Class arrayProvided = (new String[] {}).getClass();
+		final Class arrayProvided = String[].class;
 		final Class listProvided = List.class;
 		final Class setProvided = Set.class;
 		final Class objectProvided = A.class;
@@ -68,7 +67,6 @@ public class ClassUtilsTest {
 		final A objectProvided = new A();
 		
 		// expected
-		final Kind primitiveExpected = Kind.PRIMITIVE;
 		final Kind boxedExpected = Kind.BOXED;
 		final Kind iterableExpected = Kind.ITERABLE;
 		final Kind objectExpected = Kind.OBJECT;
@@ -126,7 +124,7 @@ public class ClassUtilsTest {
 		final short shortExpected = 1;
 		final Double doubleBExpected = 1.;
 		final double doubleExpected = 1.;
-		final Float floatBExpected = Float.valueOf(1);
+		final Float floatBExpected = 1F;
 		final float floatExpected = 1F;
 		final Boolean booleanBExpected = true;
 		final boolean booleanExpected = true;
@@ -135,7 +133,6 @@ public class ClassUtilsTest {
 		final Character characterExpected = 'c';
 		final char charExpected = 'c';
 		final String stringExpected = "test";
-		final Optional<Boolean> optionalExpected = Optional.of(true);
 		
 		// actual
 		final int intActual = ClassUtils.convert(int.class, intProvided);
@@ -184,9 +181,9 @@ public class ClassUtilsTest {
 		final Class<Iterable> iterableProvided = Iterable.class;
 		final Class<Collection> collectionProvided = Collection.class;
 		final Class<List> listProvided = List.class;
-		final Class setProvided = Set.class;
-		final Class sortedSetProvided = SortedSet.class;
-		final Class queueProvided = Queue.class;
+		final Class<Set> setProvided = Set.class;
+		final Class<SortedSet> sortedSetProvided = SortedSet.class;
+		final Class<Queue> queueProvided = Queue.class;
 		
 		// expected
 		final Iterable iterableExpected = new ArrayList();

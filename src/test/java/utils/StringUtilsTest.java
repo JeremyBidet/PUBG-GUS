@@ -3,12 +3,30 @@ package fr.whyt.pubg.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings({"ConstantConditions"})
 public class StringUtilsTest {
+	
+	@Test
+	public void testIsBlank() {
+		// given
+		final String provided1 = "     ";
+		final String provided2 = "";
+		final String provided3 = null;
+		
+		// expected
+		
+		// actual
+		
+		// assert
+		Assertions.assertTrue(StringUtils.isBlank(provided1));
+		Assertions.assertTrue(StringUtils.isBlank(provided2));
+		Assertions.assertTrue(StringUtils.isBlank(provided3));
+	}
 	
 	@Test
 	public void testIsEmpty() {
 		// given
-		final String provided1 = "dfsdf";
+		final String provided1 = "     ";
 		final String provided2 = "";
 		final String provided3 = null;
 		

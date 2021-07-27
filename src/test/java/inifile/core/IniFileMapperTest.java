@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+@SuppressWarnings({"rawtypes", "unchecked", "ConstantConditions"})
 public class IniFileMapperTest {
 	
 	private static class A {
@@ -215,7 +216,6 @@ public class IniFileMapperTest {
 		//Assertions.assertEquals(expected, actual);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testDeserializeList() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		// given

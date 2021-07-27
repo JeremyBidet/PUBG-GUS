@@ -3,6 +3,7 @@ package fr.whyt.pubg.utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings({"ConstantConditions", "UnnecessaryLocalVariable"})
 public class ObjectHelperTest {
 	
 	@Test
