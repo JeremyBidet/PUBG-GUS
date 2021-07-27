@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="PUBG-GUS">
+    <output-path>$PROJECT_DIR$/out/artifacts/PUBG_GUS</output-path>
+    <root id="root">
+      <element id="archive" name="PUBG_GUS.jar">
+        <element id="module-output" name="PUBG-GUS" />
+      </element>
+    </root>
+  </artifact>
+</component>
