@@ -417,7 +417,7 @@ public class IniFileMapper {
 								if (field.isAnnotationPresent(IniOptional.class)) {
 									final IniOptional iniOptionalProp = field.getAnnotation(IniOptional.class);
 									final IniOptionalValue optionalValue = iniOptionalProp.value();
-									fieldDefaultValue = ClassUtils.convert(fieldType, optionalValue.getValue());
+									fieldDefaultValue = ClassUtils.convert(fieldType, optionalValue.getValue().toString());
 								}
 							} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 								e.printStackTrace();

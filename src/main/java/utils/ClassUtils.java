@@ -75,29 +75,30 @@ public class ClassUtils {
      * @throws ClassCastException
      */
     @SuppressWarnings("unchecked")
-    public static <T> T convert(final Class<T> type, final Object value) throws UnsupportedOperationException, ClassCastException {
-        if (Objects.isNull(value)) {
+    public static <T> T convert(final Class<T> type, final String value) throws UnsupportedOperationException, ClassCastException {
+        if (StringUtils.isEmpty(value)) {
             return null;
         }
+        
         switch (type.getSimpleName()) {
-            // primitive and boxed types
-            case "String":      return type.cast(StringUtils.removeEnclosingQuotes((String) value));
-            case "Integer":
-            case "Long":
-            case "Short":
-            case "Double":
-            case "Float":
-            case "Boolean":
-            case "Byte":
-            case "Character":
-            case "int":
-            case "long":
-            case "short":
-            case "double":
-            case "float":
-            case "boolean":
-            case "byte":
-            case "char":        return type.cast(value);
+            // primitive boxed type
+            case "String":      return type.cast(StringUtils.removeEnclosingQuotes(value));
+            case "Integer":     return type.cast(Integer.valueOf(value));
+            case "int":         return (T) Integer.valueOf(value);
+            case "Long":        return type.cast(Long.valueOf(value));
+            case "long":        return (T) Long.valueOf(value);
+            case "Short":       return type.cast(Short.valueOf(value));
+            case "short":       return (T) Short.valueOf(value);
+            case "Double":      return type.cast(Double.valueOf(value));
+            case "double":      return (T) Double.valueOf(value);
+            case "Float":       return type.cast(Float.valueOf(value));
+            case "float":       return (T) Float.valueOf(value);
+            case "Boolean":     return type.cast(Boolean.valueOf(value));
+            case "boolean":     return (T) Boolean.valueOf(value);
+            case "Byte":        return type.cast(Byte.valueOf(value));
+            case "byte":        return (T) Byte.valueOf(value);
+            case "Character":   return type.cast(value.charAt(0));
+            case "char":        return (T) Character.valueOf(value.charAt(0));
             // not found type
             default: throw new UnsupportedOperationException("No converter found for type <" + type + ">");
         }

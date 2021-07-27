@@ -363,11 +363,11 @@ public class IniPropertyPatternTest {
 			// actual
 			final Executable actual = () -> {
 				if (provided == null) {
-					throw new ParsingException("There's nothing to parse!", provided, patternProvided);
+					throw new ParsingException("There's nothing to parse!", provided, regexProvided);
 				}
 				final Matcher matcherActual = patternProvided.matcher(provided);
 				if (!matcherActual.matches()) {
-					throw new ParsingException("Error occurred while parsing this value!", provided, patternProvided);
+					throw new ParsingException("Error occurred while parsing this value!", provided, regexProvided);
 				}
 			};
 			
