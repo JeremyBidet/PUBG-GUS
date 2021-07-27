@@ -1,20 +1,21 @@
 package fr.whyt.pubg.data.iniimpl;
 
-import fr.whyt.pubg.inifile.annotations.Property;
+import fr.whyt.pubg.inifile.annotations.IniProperty;
 import fr.whyt.pubg.utils.ClassHelper;
 import fr.whyt.pubg.utils.annotations.Identity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ActionKey extends ClassHelper {
+public class ActionKey extends ClassHelper implements Serializable {
 	
 	@Identity
-	@Property(name = "ActionName", raw = false)
+	@IniProperty(name = "ActionName", raw = false)
 	public String actionName;
 	
-	@Property(name = "Keys")
+	@IniProperty(name = "Keys")
 	public List<Key> keyList;
 	
 	public ActionKey(final String actionName, final List<Key> keyList) {

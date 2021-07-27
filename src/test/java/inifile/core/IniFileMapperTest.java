@@ -1,35 +1,90 @@
 package fr.whyt.pubg.inifile.core;
 
-import fr.whyt.pubg.inifile.annotations.Property;
+import fr.whyt.pubg.inifile.annotations.IniOptional;
+import fr.whyt.pubg.inifile.annotations.IniProperty;
+import fr.whyt.pubg.inifile.annotations.IniWrapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class IniFileMapperTest {
 	
 	private static class A {
-		@Property
+		@IniProperty
 		public int integer;
-		@Property
-		public String string;
-		@Property
-		public boolean bool;
-		@Property
-		public List<Integer> list;
-		@Property
-		public B b;
 		
-		public A(final int integer, final String string, final boolean bool, final List<Integer> list, final B b) {
+		@IniProperty(name = "int")
+		public int integerRenamed;
+		
+		@IniProperty(format = "%4d")
+		public int integerFormatted;
+		
+		@IniProperty(format = "%4d", pattern = "\\d{4}")
+		public int integerPattern;
+		
+		@IniProperty
+		public String string;
+		
+		@IniProperty(raw = true)
+		public String stringRaw;
+		
+		@IniProperty(optional = true)
+		public String stringOptional;
+		
+		@IniProperty
+		public boolean bool;
+		
+		static { IniOptionalValue.customize(IniOptionalValue.BOOLEAN, true); }
+		@IniProperty(optional = true)
+		@IniOptional(IniOptionalValue.BOOLEAN)
+		public boolean boolOptionalCustomTrue;
+		
+		@IniProperty(optional = true)
+		@IniOptional(IniOptionalValue.BOOLEAN_FALSE)
+		public boolean boolOptionalFalse;
+		
+		@IniProperty
+		public B bWrappedWithBrace;
+		
+		@IniProperty
+		public C cWrappedWithParenthesis;
+		
+		@IniProperty
+		@IniWrapper(IniPropertyWrapper.BRACKET)
+		public List<Integer> intListWrappedWithBracket;
+		
+		@IniProperty
+		@IniWrapper(IniPropertyWrapper.PARENTHESIS)
+		public List<C> cListWrappedWithParenthesis;
+		
+		public A(final int integer, final int integerRenamed, final int integerFormatted, final int integerPattern,
+		         final String string, final String stringRaw, final String stringOptional,
+		         final boolean bool, final boolean boolOptionalCustomTrue, final boolean boolOptionalFalse,
+		         final B bWrappedWithBrace, final C cWrappedWithParenthesis,
+		         final List<Integer> intListWrappedWithBracket, final List<C> cListWrappedWithParenthesis) {
 			this.integer = integer;
+			this.integerRenamed = integerRenamed;
+			this.integerFormatted = integerFormatted;
+			this.integerPattern = integerPattern;
 			this.string = string;
+			this.stringRaw = stringRaw;
+			this.stringOptional = stringOptional;
 			this.bool = bool;
-			this.list = list;
-			this.b = b;
+			this.boolOptionalCustomTrue = boolOptionalCustomTrue;
+			this.boolOptionalFalse = boolOptionalFalse;
+			this.bWrappedWithBrace = bWrappedWithBrace;
+			this.cWrappedWithParenthesis = cWrappedWithParenthesis;
+			this.intListWrappedWithBracket = intListWrappedWithBracket;
+			this.cListWrappedWithParenthesis = cListWrappedWithParenthesis;
 		}
 		@SuppressWarnings("unused") public A() {}
 		
@@ -39,21 +94,28 @@ public class IniFileMapperTest {
 			if (o == null || getClass() != o.getClass()) return false;
 			final A a = (A) o;
 			return integer == a.integer
-			       && bool == a.bool
+			       && integerRenamed == a.integerRenamed
+			       && integerFormatted == a.integerFormatted
+			       && integerPattern == a.integerPattern
 			       && Objects.equals(string, a.string)
-			       && Objects.equals(list, a.list)
-			       && Objects.equals(b, a.b);
+			       && Objects.equals(stringRaw, a.stringRaw)
+			       && Objects.equals(stringOptional, a.stringOptional)
+			       && bool == a.bool
+			       && boolOptionalCustomTrue == a.boolOptionalCustomTrue
+			       && boolOptionalFalse == a.boolOptionalFalse
+			       && Objects.equals(bWrappedWithBrace, a.bWrappedWithBrace)
+			       && Objects.equals(cWrappedWithParenthesis, a.cWrappedWithParenthesis)
+			       && Objects.equals(intListWrappedWithBracket, a.intListWrappedWithBracket)
+			       && Objects.equals(cListWrappedWithParenthesis, a.cListWrappedWithParenthesis);
 		}
 	}
 	
+	@IniWrapper(IniPropertyWrapper.BRACE)
 	private static class B {
-		@Property
-		public double dooble;
-		@Property
+		@IniProperty
 		public char character;
 		
-		public B(final double dooble, final char character) {
-			this.dooble = dooble;
+		public B(final char character) {
 			this.character = character;
 		}
 		@SuppressWarnings("unused") public B() {}
@@ -63,23 +125,20 @@ public class IniFileMapperTest {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
 			final B b = (B) o;
-			return Double.compare(b.dooble, dooble) == 0
-			       && character == b.character;
+			return character == b.character;
 		}
 	}
 	
+	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
 	private static class C {
-		@Property
-		public String obj;
-		@Property
-		public boolean key;
-		@Property
-		public List<Integer> list;
+		@IniProperty
+		public double decimal;
+		@IniProperty
+		public int precision;
 		
-		public C(final String obj, final boolean key, final List<Integer> list) {
-			this.obj = obj;
-			this.key = key;
-			this.list = list;
+		public C(final double decimal, final int precision) {
+			this.decimal = decimal;
+			this.precision = precision;
 		}
 		@SuppressWarnings("unused") public C() {}
 		
@@ -88,37 +147,72 @@ public class IniFileMapperTest {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
 			final C c = (C) o;
-			return key == c.key
-			       && Objects.equals(obj, c.obj)
-			       && Objects.equals(list, c.list);
+			return Double.compare(c.decimal, decimal) == 0 && precision == precision;
 		}
 	}
 	
-	@Test
-	public void testDeserialize_simple() {
+	private static Stream deserializeProviders() {
+		return Stream.of(
+				Arguments.of(
+						"integer=1" + ",int=2" + ",integerFormatted=3" + ",integerPattern=0004"
+								+ ",string=\"quoted\"" + ",stringRaw=raw" + ",stringOptional=\"\""
+								+ ",bool=true" + ",boolOptionalCustomTrue=true" + ",boolOptionalFalse=False"
+					            + ",bWrappedWithBrace={character=a}"
+					            + ",cWrappedWithParenthesis=(decimal=1.0,precision=1)"
+					            + ",listNotWrapped=[1,2,3]"
+					            + ",cListWrappedWithParenthesis=((decimal=1.0,precision=1),(decimal=2.10,precision=2),(decimal=-3.001,precision=3))",
+						new A(1, 2, 3, 4,
+								"quoted", "raw", null,
+								true, true, false,
+								new B('a'), new C(1.0, 1),
+								List.of(1, 2, 3),
+								List.of(new C(1.0, 1), new C(2.10, 2), new C(-3.001, 3)))
+				),
+				Arguments.of(
+						"integer=1" + ",int=2" + ",integerFormatted=3" + ",integerPattern=0004"
+								+ ",string=\"quoted\"" + ",stringRaw=raw" + ",stringOptional=\"ok\""
+								+ ",bool=true" + ",boolOptionalCustomTrue=false" + ",boolOptionalFalse=True"
+								+ ",bWrappedWithBrace={character=a}"
+								+ ",cWrappedWithParenthesis=(decimal=1.0,precision=1)"
+								+ ",listNotWrapped=[],"
+								+ ",cListWrappedWithParenthesis=()",
+						new A(1, 2, 3, 4,
+								"quoted", "raw", "ok",
+								true, false, true,
+								new B('a'), new C(1.0, 1),
+								Collections.emptyList(),
+								Collections.emptyList())
+				),
+				Arguments.of(
+						"integer=1" + ",int=2" + ",integerFormatted=3" + ",integerPattern=0004"
+								+ ",string=\"\"" + ",stringRaw=raw"
+								+ ",bool=true" + ",boolOptionalFalse=True"
+								+ ",bWrappedWithBrace={character=a}"
+								+ ",cWrappedWithParenthesis=(decimal=1.0,precision=1)"
+								+ ",listNotWrapped=[],"
+								+ ",cListWrappedWithParenthesis=()",
+						new A(1, 2, 3, 4,
+								"", "raw", null,
+								true, true, true,
+								new B('a'), new C(1.0, 1),
+								Collections.emptyList(),
+								Collections.emptyList())
+				)
+		);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("deserializeProviders")
+	public void testDeserialize_full(final String provided, final Object expected) {
 		// given
-		final String provided1 = "integer=1";
-		final String provided2 = "integer=2,string=\"ok\"";
-		final String provided3 = "integer=3,string=\"\",bool=true";
-		final String provided4 = "integer=4,string=,bool=true,list=(),b=(dooble=3.14,character=c)";
 		
 		// expected
-		final A expected1 = new A(1, null, false, null,null);
-		final A expected2 = new A(2, "ok", false, null,null);
-		final A expected3 = new A(3, "", true, null,null);
-		final A expected4 = new A(4, null, true, Collections.emptyList(),new B(3.14, 'c'));
 		
 		// actual
-		final A actual1 = IniFileMapper.deserialize(provided1, A.class);
-		final A actual2 = IniFileMapper.deserialize(provided2, A.class);
-		final A actual3 = IniFileMapper.deserialize(provided3, A.class);
-		final A actual4 = IniFileMapper.deserialize(provided4, A.class);
+		final A actual = IniFileMapper.deserialize(provided, A.class);
 		
 		// assert
-		Assertions.assertEquals(expected1, actual1);
-		Assertions.assertEquals(expected2, actual2);
-		Assertions.assertEquals(expected3, actual3);
-		Assertions.assertEquals(expected4, actual4);
+		Assertions.assertEquals(expected, actual);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -1,24 +1,25 @@
 package fr.whyt.pubg.data.iniimpl;
 
-import fr.whyt.pubg.inifile.annotations.Property;
+import fr.whyt.pubg.inifile.annotations.IniProperty;
 import fr.whyt.pubg.utils.ClassHelper;
 import fr.whyt.pubg.utils.annotations.Identity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AxisKey extends ClassHelper {
+public class AxisKey extends ClassHelper implements Serializable {
 	
 	@Identity
-	@Property(name = "AxisName")
+	@IniProperty(name = "AxisName")
 	public String axisName;
 	
-	@Property(name = "Scale")
+	@IniProperty(name = "Scale")
 	public double scale;
 	
-	@Property(name = "Keys")
-	public final List<Key> keyList;
+	@IniProperty(name = "Keys")
+	public List<Key> keyList;
 	
 	public AxisKey(final String axisName, final double scale, final List<Key> keyList) {
 		this.axisName = axisName;

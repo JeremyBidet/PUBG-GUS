@@ -1,17 +1,20 @@
 package fr.whyt.pubg.data.iniimpl;
 
-import fr.whyt.pubg.inifile.annotations.Property;
+import fr.whyt.pubg.inifile.annotations.IniProperty;
+import fr.whyt.pubg.inifile.annotations.IniRoot;
 import fr.whyt.pubg.utils.ClassHelper;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomInputSettings extends ClassHelper {
+@IniRoot
+public class CustomInputSettings extends ClassHelper implements Serializable {
 	
-	@Property(name = "ActionKeyList")
+	@IniProperty(name = "ActionKeyList")
 	public List<ActionKey> actionKeyList;
 	
-	@Property(name = "AxisKeyList")
+	@IniProperty(name = "AxisKeyList")
 	public List<AxisKey> axisKeyList;
 	
 	public CustomInputSettings(final List<ActionKey> actionKeyList,

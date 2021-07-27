@@ -2,8 +2,24 @@ package fr.whyt.pubg.utils;
 
 public class StringUtils {
     
+    /**
+     * Check if the given string is null, blank (empty ignoring tailing spaces).<br>
+     *
+     * @param str the string to check
+     * @return true if null or blank, false otherwise.
+     */
+    public static boolean isBlank(final String str) {
+        return str == null || isEmpty(str.trim());
+    }
+    
+    /**
+     * Check if the given string is null or empty.<br>
+     *
+     * @param str the string to check
+     * @return true if null or empty, false otherwise
+     */
     public static boolean isEmpty(final String str) {
-        return str == null || str.trim().isEmpty();
+        return str == null || str.isEmpty();
     }
     
     public static String removeEnclosingQuotes(final String str) {

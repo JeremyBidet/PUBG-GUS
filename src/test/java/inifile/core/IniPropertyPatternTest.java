@@ -15,12 +15,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-public class IniFileRegexTest {
+public class IniPropertyPatternTest {
 
 	@Test
 	public void testBoolean() {
 		// given
-		final Pattern patternProvided = IniFileRegex.boolean_pattern;
+		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.BOOLEAN);
 		final String provided1 = "false";
 		final String provided2 = "False";
 		final String provided3 = "true";
@@ -57,7 +57,7 @@ public class IniFileRegexTest {
 	@Test
 	public void testDouble() {
 		// given
-		final Pattern patternProvided = IniFileRegex.double_pattern;
+		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.DOUBLE);
 		final String provided1 = "0.0";
 		final String provided2 = "1.23456789";
 		final String provided3 = "-987654321.0000000000";
@@ -89,7 +89,7 @@ public class IniFileRegexTest {
 	@Test
 	public void testInteger() {
 		// given
-		final Pattern patternProvided = IniFileRegex.integer_pattern;
+		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.INTEGER);
 		final String provided1 = "0";
 		final String provided2 = "1";
 		final String provided3 = "-1";
@@ -128,7 +128,7 @@ public class IniFileRegexTest {
 	@Test
 	public void testWord() {
 		// given
-		final Pattern patternProvided = IniFileRegex.word_pattern;
+		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.WORD);
 		final String provided1 = "azerty";
 		final String provided2 = "azerty_uiop";
 		final String provided3 = "azerty-uiop";
@@ -160,7 +160,7 @@ public class IniFileRegexTest {
 	@Test
 	public void testWordQuote() {
 		// given
-		final Pattern patternProvided = IniFileRegex.word_quote_pattern;
+		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.DOUBLE_QUOTED_WORD);
 		final String provided1 = "\"azerty\"";
 		final String provided2 = "\"azerty_uiop\"";
 		final String provided3 = "\"azerty-uiop\"";
@@ -192,7 +192,7 @@ public class IniFileRegexTest {
 	@Test
 	public void testString() {
 		// given
-		final Pattern patternProvided = IniFileRegex.string_pattern;
+		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.STRING);
 		final String provided1 = "\\\"{azerty}\\\"";
 		final String provided2 = "\\\"{azerty_uiop}\\\"";
 		final String provided3 = "\\\"{azerty-uiop}\\\"";
@@ -224,7 +224,7 @@ public class IniFileRegexTest {
 	@Test
 	public void testStringQuote() {
 		// given
-		final Pattern patternProvided = IniFileRegex.string_quote_pattern;
+		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.DOUBLE_QUOTED_STRING);
 		final String provided1 = "\"\\\"{azerty}\\\"\"";
 		final String provided2 = "\"\\\"{azerty_uiop}\\\"\"";
 		final String provided3 = "\"\\\"{azerty-uiop}\\\"\"";
@@ -275,7 +275,7 @@ public class IniFileRegexTest {
 		final String objectExpected = "(";
 		
 		// actual
-		final Matcher matcherActual = IniFileRegex.key_value_pattern_named.matcher(provided);
+		final Matcher matcherActual = IniPropertyPattern.key_value_pattern_named.matcher(provided);
 		matcherActual.find();
 		final String keyActual = matcherActual.group("key");
 		final boolean booleanActual = Boolean.parseBoolean(matcherActual.group("value"));
@@ -325,7 +325,7 @@ public class IniFileRegexTest {
 		final String objectExpected = "(";
 		
 		// actual
-		final Matcher matcherActual = IniFileRegex.key_value_pattern_named.matcher(provided);
+		final Matcher matcherActual = IniPropertyPattern.key_value_pattern_named.matcher(provided);
 		matcherActual.find();
 		final String keyActual = matcherActual.group("key");
 		final boolean booleanActual = Boolean.parseBoolean(matcherActual.group("value"));
@@ -355,8 +355,11 @@ public class IniFileRegexTest {
 	
 	@ParameterizedTest
 	@MethodSource("regexFailProvider")
-	public void testAllFail(final Pattern patternProvided, final List<String> provideds) {
-		for(final String provided : provideds) {
+	public void testAllFail(final String regexProvided, final List<String> providedList) {
+		for(final String provided : providedList) {
+			// given
+			final Pattern patternProvided = Pattern.compile(regexProvided);
+			
 			// actual
 			final Executable actual = () -> {
 				if (provided == null) {
@@ -375,14 +378,14 @@ public class IniFileRegexTest {
 	
 	private static Stream<Arguments> regexFailProvider() {
 		return Stream.of(
-				Arguments.of(IniFileRegex.boolean_pattern, Arrays.asList("zeffs", "", null)),
-				Arguments.of(IniFileRegex.double_pattern, Arrays.asList("100", "", null)),
-				Arguments.of(IniFileRegex.integer_pattern, Arrays.asList("100.0", "", null)),
-				Arguments.of(IniFileRegex.word_pattern, Arrays.asList("\"100\"", "", null)),
-				Arguments.of(IniFileRegex.word_quote_pattern, Arrays.asList("100", "qsdq", null)),
+				Arguments.of(IniPropertyPattern.BOOLEAN, Arrays.asList("zeffs", "", null)),
+				Arguments.of(IniPropertyPattern.DOUBLE, Arrays.asList("100", "", null)),
+				Arguments.of(IniPropertyPattern.INTEGER, Arrays.asList("100.0", "", null)),
+				Arguments.of(IniPropertyPattern.WORD, Arrays.asList("\"100\"", "", null)),
+				Arguments.of(IniPropertyPattern.DOUBLE_QUOTED_WORD, Arrays.asList("100", "qsdq", null)),
 				// FIXME: the commented string should fail, but for an obscure reason the regex matches
-				Arguments.of(IniFileRegex.string_pattern, Arrays.asList(/*"\"abc\\\"$'_-\"",*/ "", null)),
-				Arguments.of(IniFileRegex.string_quote_pattern, Arrays.asList("\\\"grz\"'ééfé\\\"", "", null))
+				Arguments.of(IniPropertyPattern.STRING, Arrays.asList(/*"\"abc\\\"$'_-\"",*/ "", null)),
+				Arguments.of(IniPropertyPattern.DOUBLE_QUOTED_STRING, Arrays.asList("\\\"grz\"'ééfé\\\"", "", null))
 		);
 	}
 	

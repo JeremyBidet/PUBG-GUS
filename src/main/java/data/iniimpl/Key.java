@@ -1,25 +1,27 @@
 package fr.whyt.pubg.data.iniimpl;
 
-import fr.whyt.pubg.inifile.annotations.Property;
+import fr.whyt.pubg.inifile.annotations.IniProperty;
 import fr.whyt.pubg.utils.ClassHelper;
 import fr.whyt.pubg.utils.annotations.Identity;
 
-public class Key extends ClassHelper {
+import java.io.Serializable;
+
+public class Key extends ClassHelper implements Serializable {
 	
 	@Identity
-	@Property(name = "Key", raw = true)
+	@IniProperty(name = "Key", raw = true)
 	public String key;
 	
 	@Identity
-	@Property(name = "bCtrl", optional = true)
+	@IniProperty(name = "bCtrl", optional = true)
 	public boolean bCtrl;
 	
 	@Identity
-	@Property(name = "bAlt", optional = true)
+	@IniProperty(name = "bAlt", optional = true)
 	public boolean bAlt;
 	
 	@Identity
-	@Property(name = "bShift", optional = true)
+	@IniProperty(name = "bShift", optional = true)
 	public boolean bShift;
 	
 	public Key(final String key, final boolean bCtrl, final boolean bAlt, final boolean bShift) {
