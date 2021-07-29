@@ -4,7 +4,10 @@ import fr.whyt.pubg.inifile.annotations.IniProperty;
 import fr.whyt.pubg.inifile.annotations.IniWrapper;
 import fr.whyt.pubg.inifile.core.IniPropertyWrapper;
 
-public class ObjectNested {
+import java.io.Serializable;
+
+@IniWrapper(IniPropertyWrapper.BRACE)
+public class ObjectNested implements Serializable {
 	
 	public Level1 level1;
 	

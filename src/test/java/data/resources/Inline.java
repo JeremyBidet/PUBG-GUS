@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+@IniWrapper(IniPropertyWrapper.PARENTHESIS)
 public class Inline extends ClassHelper implements Serializable {
 	
 	@IniProperty
@@ -19,32 +20,36 @@ public class Inline extends ClassHelper implements Serializable {
 	@IniProperty(name = "int")
 	public int integerRenamed;
 	
-	@IniProperty(format = "%4d")
+	@IniProperty(name = "intF", format = "%4d")
 	public int integerFormatted;
 	
-	@IniProperty(format = "%4d", pattern = "\\d{4}")
+	@IniProperty(name = "intP", format = "%4d", pattern = "\\d{4}")
 	public int integerPattern;
 	
 	@IniProperty
 	public String string;
 	
-	@IniProperty(raw = true)
+	@IniProperty(name = "raw", raw = true)
 	public String stringRaw;
 	
-	@IniProperty(optional = true)
-	public String stringOptional;
+	@IniProperty(name = "strOptDef", optional = true)
+	public String stringOptionalDefault;
+	
+	@IniProperty(name = "strOptEmpty", optional = true)
+	@IniOptional(IniOptionalValue.STRING_EMPTY)
+	public String stringOptionalEmpty;
 	
 	@IniProperty
 	public boolean bool;
 	
-	static { IniOptionalValue.customize(IniOptionalValue.BOOLEAN, true); }
-	@IniProperty(optional = true)
-	@IniOptional(IniOptionalValue.BOOLEAN)
-	public boolean boolOptionalCustomTrue;
-	
-	@IniProperty(optional = true)
+	@IniProperty(name = "boolOptFalse", optional = true)
 	@IniOptional(IniOptionalValue.BOOLEAN_FALSE)
 	public boolean boolOptionalFalse;
+	
+	static { IniOptionalValue.customize(IniOptionalValue.BOOLEAN, true); }
+	@IniProperty(name = "boolOptCustomTrue", optional = true)
+	@IniOptional(IniOptionalValue.BOOLEAN)
+	public boolean boolOptionalCustomTrue;
 	
 	@IniProperty
 	public Brace brace;
@@ -52,17 +57,17 @@ public class Inline extends ClassHelper implements Serializable {
 	@IniProperty
 	public Parenthesis parenthesis;
 	
-	@IniProperty
+	@IniProperty(name = "bracketList")
 	@IniWrapper(IniPropertyWrapper.BRACKET)
 	public List<Integer> intListWrappedWithBracket;
 	
-	@IniProperty
+	@IniProperty(name = "parenthesisList")
 	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
 	public List<Parenthesis> parenthesisListWrappedWithParentheses;
 	
 	public Inline(final int integer, final int integerRenamed, final int integerFormatted, final int integerPattern,
-	              final String string, final String stringRaw, final String stringOptional,
-	              final boolean bool, final boolean boolOptionalCustomTrue, final boolean boolOptionalFalse,
+	              final String string, final String stringRaw, final String stringOptionalDefault, final String stringOptionalEmpty,
+	              final boolean bool, final boolean boolOptionalFalse, final boolean boolOptionalCustomTrue,
 	              final Brace brace, final Parenthesis parenthesis,
 	              final List<Integer> intListWrappedWithBracket, final List<Parenthesis> parenthesisListWrappedWithParentheses) {
 		this.integer = integer;
@@ -71,10 +76,11 @@ public class Inline extends ClassHelper implements Serializable {
 		this.integerPattern = integerPattern;
 		this.string = string;
 		this.stringRaw = stringRaw;
-		this.stringOptional = stringOptional;
+		this.stringOptionalDefault = stringOptionalDefault;
+		this.stringOptionalEmpty = stringOptionalEmpty;
 		this.bool = bool;
-		this.boolOptionalCustomTrue = boolOptionalCustomTrue;
 		this.boolOptionalFalse = boolOptionalFalse;
+		this.boolOptionalCustomTrue = boolOptionalCustomTrue;
 		this.brace = brace;
 		this.parenthesis = parenthesis;
 		this.intListWrappedWithBracket = intListWrappedWithBracket;
@@ -93,10 +99,11 @@ public class Inline extends ClassHelper implements Serializable {
 				       && integerPattern == inline.integerPattern
 				       && Objects.equals(string, inline.string)
 				       && Objects.equals(stringRaw, inline.stringRaw)
-				       && Objects.equals(stringOptional, inline.stringOptional)
+				       && Objects.equals(stringOptionalDefault, inline.stringOptionalDefault)
+				       && Objects.equals(stringOptionalEmpty, inline.stringOptionalEmpty)
 				       && bool == inline.bool
-				       && boolOptionalCustomTrue == inline.boolOptionalCustomTrue
 				       && boolOptionalFalse == inline.boolOptionalFalse
+				       && boolOptionalCustomTrue == inline.boolOptionalCustomTrue
 				       && Objects.equals(brace, inline.brace)
 				       && Objects.equals(parenthesis, inline.parenthesis)
 				       && Objects.equals(intListWrappedWithBracket, inline.intListWrappedWithBracket)

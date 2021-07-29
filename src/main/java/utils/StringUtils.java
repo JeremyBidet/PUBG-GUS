@@ -22,6 +22,13 @@ public class StringUtils {
         return str == null || str.isEmpty();
     }
     
+    public static boolean hasEnclosingQuotes(final String str) {
+        if (str.matches("^\".*\"$")) {
+            return false;
+        }
+        return true;
+    }
+    
     public static String removeEnclosingQuotes(final String str) {
         if (str == null) {
             return null;

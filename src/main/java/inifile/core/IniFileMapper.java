@@ -17,7 +17,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -45,10 +48,11 @@ public class IniFileMapper {
 	
 	/**
 	 * Deserialize (parse) an INI file into a Java class.<br>
-	 *
+	 * <br>
 	 * @param <T>  the Java class type
 	 * @param type the Java class of the type
-	 *
+	 * @throws IOException            when error occurred while opening the INI file
+	 * @throws ClassNotFoundException when the {@linkplain IniRoot root} class type does not implements {@link Serializable}
 	 * @return the Java class instance with parsed values
 	 */
 	public static <T> T deserialize(final Path iniPath, final Class<T> type) throws IOException, ClassNotFoundException {
@@ -137,11 +141,12 @@ public class IniFileMapper {
 	
 	/**
 	 * Parse an INI object as a Java type.<br>
-	 *
+	 * <br>
 	 * @param <T>       the Java class type
 	 * @param fieldType the Java object class type
 	 * @param rawValue  the raw value to deserialize
-	 *
+	 * @throws ClassNotFoundException transitive exception. See {@link IniFileMapper#deserializeObject}
+	 * @throws ParsingException       when error occurred while deserializing the raw value
 	 * @return the Java class instance with parsed value
 	 */
 	// FIXME: public for tests purpose, should be private
@@ -157,6 +162,10 @@ public class IniFileMapper {
 			final boolean raw = property.raw();
 			if (!raw) {
 				value = StringUtils.removeEnclosingQuotes(rawValue);
+			} else {
+				if (!StringUtils.hasEnclosingQuotes(rawValue)) {
+					throw new ParsingException("Cannot parse the value! It should be a raw string and there are enclosing quotes.", rawValue, IniPropertyPattern.STRING);
+				}
 			}
 			
 			final String pattern = property.pattern();
@@ -167,47 +176,30 @@ public class IniFileMapper {
 			}
 			
 			final Object convertedValue = deserializeValue(fieldType, value);
+			
+			if (fieldKind == Kind.PRIMITIVE) {
+				fieldType = ClassUtils.box(fieldType);
+			}
+			
 			return fieldType.cast(convertedValue);
 		}
 		
 		if (fieldKind == Kind.ITERABLE) {
-			IniPropertyWrapper iterableWrapper = DEFAULT_LIST_WRAPPER;
-			if (fieldType.isAnnotationPresent(IniWrapper.class)) {
-				iterableWrapper = fieldType.getDeclaredAnnotation(IniWrapper.class).value();
-			}
-			
 			final Class<?> elementType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-			IniPropertyWrapper elementWrapper = DEFAULT_OBJECT_WRAPPER;
-			if (elementType.isAnnotationPresent(IniWrapper.class)) {
-				elementWrapper = elementType.getDeclaredAnnotation(IniWrapper.class).value();
-			} else {
-				final Kind elementKind = ClassUtils.getKind(elementType);
-				if (elementKind == Kind.PRIMITIVE || elementKind == Kind.BOXED) {
-					elementWrapper = null;
-				}
-				if (elementKind == Kind.ITERABLE) {
-					elementWrapper = DEFAULT_LIST_WRAPPER;
-				}
-			}
 			
 			@SuppressWarnings({"unchecked", "rawtypes"})
-			final Iterable<?> iterable = deserializeIterable(field, (Class<Collection>) fieldType, iterableWrapper, elementType, elementWrapper, rawValue);
+			final Iterable<?> iterable = deserializeIterable(field, (Class<Collection>) fieldType, elementType, rawValue);
 			return fieldType.cast(iterable);
 		}
 		
 		// else it's an object
-		IniPropertyWrapper wrapper = DEFAULT_OBJECT_WRAPPER;
-		final IniWrapper objectWrapper = fieldType.getDeclaredAnnotation(IniWrapper.class);
-		if (objectWrapper != null) {
-			wrapper = objectWrapper.value();
-		}
-		final Object object = deserializeObject(fieldType, wrapper, rawValue);
+		final Object object = deserializeObject(fieldType, rawValue);
 		return fieldType.cast(object);
 	}
 	
 	/**
 	 * Deserialize an INI primitive value in Java object.<br>
-	 *
+	 * <br>
 	 * @param valueType the java type of the deserialized value
 	 * @param value     the value to deserialize
 	 *
@@ -219,23 +211,21 @@ public class IniFileMapper {
 	
 	/**
 	 * Deserialize an INI list in Java collection.<br>
-	 *
-	 * @param <T>             the java type of the collection
-	 * @param <U>             the java type of the collection elements
-	 * @param field           the java field associated with the object
-	 * @param iterableType    the java class type of collection
-	 * @param iterableWrapper the wrapper enclosing the list
-	 * @param elementType     the java class type of the deserialized value
-	 * @param elementWrapper  the wrapper enclosing the list
-	 * @param rawValue        the whole INI object containing the list
+	 * <br>
+	 * @param <T>          the java type of the collection
+	 * @param <U>          the java type of the collection elements
+	 * @param field        the java field associated with the object
+	 * @param iterableType the java class type of collection
+	 * @param elementType  the java class type of the deserialized value
+	 * @param rawValue     the whole INI object containing the list
+	 * @throws ClassNotFoundException transitive exception. See {@link IniFileMapper#deserializeObject}
+	 * @throws ParsingException       when error occurred while deserializing the iterable
 	 * @return the deserialized INI list.
 	 */
 	private static <T extends Collection<U>, U>
 			Collection<U> deserializeIterable(final Field field,
 			                                  final Class<T> iterableType,
-			                                  final IniPropertyWrapper iterableWrapper,
 			                                  final Class<U> elementType,
-			                                  final IniPropertyWrapper elementWrapper,
 			                                  final String rawValue)
 			throws ParsingException, ClassNotFoundException {
 		final Collection<U> values = ClassUtils.newCollection(iterableType);
@@ -244,32 +234,36 @@ public class IniFileMapper {
 			throw new ParsingException("Null lists are not authorized", rawValue, null);
 		}
 		
-		if (iterableWrapper == null) {
-			throw new ParsingException("Cannot parse a list without enclosing wrapper!", rawValue, null);
+		IniPropertyWrapper iterableWrapper = DEFAULT_LIST_WRAPPER;
+		if (iterableType.isAnnotationPresent(IniWrapper.class)) {
+			iterableWrapper = iterableType.getDeclaredAnnotation(IniWrapper.class).value();
 		}
 		
 		if (rawValue.equals("" + iterableWrapper.head + iterableWrapper.tail)) {
 			return values;
 		}
 		
-		final Set<Character> headWrappers = new HashSet<>();
-		final Set<Character> tailWrappers = new HashSet<>();
-		
-		headWrappers.add(iterableWrapper.head);
-		tailWrappers.add(iterableWrapper.tail);
-		
-		if (elementWrapper != null) {
-			headWrappers.add(elementWrapper.head);
-			tailWrappers.add(elementWrapper.tail);
-		}
-		
 		final String valueStart = rawValue.substring(1);
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		int cpt = 1;
+		int quoteCpt = 0;
+		char lastChar = rawValue.charAt(0);
+		boolean isInQuotedString = false;
 		for (final char c : valueStart.toCharArray()) {
-			if (headWrappers.contains(c)) { cpt++; }
-			if (tailWrappers.contains(c)) { cpt--; }
+			if (c == '"') {
+				if (lastChar != '\\') {
+					quoteCpt = (quoteCpt + 1) % 2;
+				}
+				isInQuotedString = (quoteCpt == 1);
+			}
+			lastChar = c;
+			if (isOpenWrapper(c, isInQuotedString)) {
+				cpt++;
+			}
+			if (isCloseWrapper(c, isInQuotedString)) {
+				cpt--;
+			}
 			// if list end has been reached
 			if (cpt == 0) {
 				// the last element or the first (and unique for singleton list)
@@ -296,23 +290,29 @@ public class IniFileMapper {
 	
 	/**
 	 * Deserialize an INI object in Java object.<br>
-	 *
-	 * @param <T>         the java type of the object
-	 * @param valueType   the java class type of the object
-	 * @param wrapper     the wrapper enclosing the list
-	 * @param rawValue    the whole INI object containing the object
+	 * <br>
+	 * @param <T>        the java type of the object
+	 * @param objectType the java class type of the object
+	 * @param rawValue   the whole INI object containing the object
+	 * @throws ClassNotFoundException when object to deserialize does not implement {@link Serializable}
+	 * @throws ParsingException       when error occurred while deserializing the object
 	 * @return the deserialized INI object.
 	 */
-	private static <T> T deserializeObject(final Class<T> valueType,
-	                                       final IniPropertyWrapper wrapper,
+	private static <T> T deserializeObject(final Class<T> objectType,
 	                                       final String rawValue)
-			throws ParsingException, ClassNotFoundException {
-		if (Arrays.stream(valueType.getInterfaces()).noneMatch(i -> i.equals(Serializable.class))) {
+			throws ClassNotFoundException, ParsingException {
+		if (Arrays.stream(objectType.getInterfaces()).noneMatch(i -> i.equals(Serializable.class))) {
 			throw new ClassNotFoundException("This class should implements Serializable!");
 		}
 		
 		if (StringUtils.isBlank(rawValue)) {
 			throw new ParsingException("Null objects are not authorized", rawValue, null);
+		}
+		
+		IniPropertyWrapper wrapper = DEFAULT_OBJECT_WRAPPER;
+		final IniWrapper objectWrapper = objectType.getDeclaredAnnotation(IniWrapper.class);
+		if (objectWrapper != null) {
+			wrapper = objectWrapper.value();
 		}
 		
 		if (rawValue.equals("" + wrapper.head + wrapper.tail)) {
@@ -321,7 +321,7 @@ public class IniFileMapper {
 		
 		final String valueStart = rawValue.substring(1);
 		
-		final Map<String, Field> declaredPropertyFields = Arrays.stream(valueType.getDeclaredFields())
+		final Map<String, Field> declaredPropertyFields = Arrays.stream(objectType.getDeclaredFields())
 				.filter(field -> field.isAnnotationPresent(IniProperty.class))
                 .collect(Collectors.toMap(
                 		field -> {
@@ -333,7 +333,7 @@ public class IniFileMapper {
 		
 		final T object;
 		try {
-			object = valueType.getConstructor().newInstance();
+			object = objectType.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException instantiationException) {
 			instantiationException.printStackTrace();
 			return null;
@@ -341,9 +341,23 @@ public class IniFileMapper {
 		
 		final StringBuilder stringBuilder = new StringBuilder();
 		int cpt = 1;
+		int quoteCpt = 0;
+		char lastChar = rawValue.charAt(0);
+		boolean isInQuotedString = false;
 		for (final char c : valueStart.toCharArray()) {
-			if (c == wrapper.head) { cpt++; }
-			if (c == wrapper.tail) { cpt--; }
+			if (c == '"') {
+				if (lastChar != '\\') {
+					quoteCpt = (quoteCpt + 1) % 2;
+				}
+				isInQuotedString = (quoteCpt == 1);
+			}
+			lastChar = c;
+			if (isOpenWrapper(c, isInQuotedString)) {
+				cpt++;
+			}
+			if (isCloseWrapper(c, isInQuotedString)) {
+				cpt--;
+			}
 			// if object end has been reached
 			if (cpt == 0) {
 				return object;
@@ -406,10 +420,9 @@ public class IniFileMapper {
 	
 	/**
 	 * Write an INI file from a Java class.<br>
-	 *
+	 * <br>
 	 * @param <T>    The Java class type
 	 * @param object the Java class instance
-	 *
 	 * @return the serialized property from the Java class
 	 */
 	public static <T> String serialize(final T object) {
@@ -455,12 +468,11 @@ public class IniFileMapper {
 	 * <br>
 	 * {@code format} is used only when the object type is {@link Kind#PRIMITIVE} or {@link Kind#BOXED}.<br>
 	 * {@code raw} is used only when the object is instance of String.<br>
-	 *
+	 * <br>
 	 * @param object the object to serialize
 	 * @param format the format to apply on primitive or boxed objects
 	 * @param raw    add or remove "" on String objects
 	 * @param <T>    the object type
-	 *
 	 * @return the serialized object
 	 */
 	private static <T> String serializeGeneric(final T object, final String format, final boolean raw) {
@@ -514,6 +526,38 @@ public class IniFileMapper {
 		final Object fieldDefaultValue = ClassUtils.convert(fieldType, optionalValue.getValue().toString());
 		
 		return fieldDefaultValue;
+	}
+	
+	/**
+	 * Tell if the character {@code c} is an <b>open wrapper</b> character, or not.<br>
+	 * Note: boolean {@code ignoreWrapper} is used to ignore the check,
+	 * even if the character is in fact an open wrapper character.<br>
+	 * This second check is useful when the first check return true
+	 * but this character is located in an ignorable context,
+	 * like a quoted string for example.<br>
+	 * <br>
+	 * @param c             the character to check
+	 * @param ignoreWrapper if we ignore the result of the previous check
+	 * @return true if this character is wrapper character and is not ignored, false otherwise
+	 */
+	private static boolean isOpenWrapper(final char c, final boolean ignoreWrapper) {
+		return !ignoreWrapper && Arrays.stream(IniPropertyWrapper.values()).anyMatch(wrapper -> wrapper.head == c);
+	}
+	
+	/**
+	 * Tell if the character {@code c} is a <b>close wrapper</b> character, or not.<br>
+	 * Note: boolean {@code ignoreWrapper} is used to ignore the check,
+	 * even if the character is in fact a close wrapper character.<br>
+	 * This second check is useful when the first check return true
+	 * but this character is located in an ignorable context,
+	 * like a quoted string for example.<br>
+	 * <br>
+	 * @param c             the character to check
+	 * @param ignoreWrapper if we ignore the result of the previous check
+	 * @return true if this character is wrapper character and is not ignored, false otherwise
+	 */
+	private static boolean isCloseWrapper(final char c, final boolean ignoreWrapper) {
+		return !ignoreWrapper && Arrays.stream(IniPropertyWrapper.values()).anyMatch(wrapper -> wrapper.tail == c);
 	}
 	
 }

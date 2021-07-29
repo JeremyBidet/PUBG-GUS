@@ -67,8 +67,34 @@ public class ClassUtils {
     }
     
     /**
-     * Convert a string value into a given type.
-     *
+     * Box a primitive type.<br>
+     * <br>
+     * @param primitiveType the primitive class type to box
+     * @param <T> the primitive type
+     * @param <U> the boxed type
+     * @return the boxed class type
+     */
+    @SuppressWarnings("unchecked")
+    public static <T, U> Class<U> box(final Class<T> primitiveType) {
+        if (primitiveType == null) {
+            return null;
+        }
+        switch (primitiveType.getSimpleName()) {
+            case "int": return (Class<U>) Integer.class;
+            case "long": return (Class<U>) Long.class;
+            case "short": return (Class<U>) Short.class;
+            case "byte": return (Class<U>) Byte.class;
+            case "float": return (Class<U>) Float.class;
+            case "double": return (Class<U>) Double.class;
+            case "char": return (Class<U>) Character.class;
+            case "boolean": return (Class<U>) Boolean.class;
+            default: return null;
+        }
+    }
+    
+    /**
+     * Convert a string value into a given type.<br>
+     * <br>
      * @param type the result class type of the conversion
      * @param value the value to convert
      * @param <T> the result type of the conversion
