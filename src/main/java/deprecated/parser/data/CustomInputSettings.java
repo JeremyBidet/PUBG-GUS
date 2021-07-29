@@ -55,6 +55,7 @@ public class CustomInputSettings implements IniFile<CustomInputSettings> {
         return "CustomInputSettings { " + "actionKeyList=" + actionKeyList + ", axisKeyList=" + axisKeyList + " }";
     }
     
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     public CustomInputSettings deserialize(final String source) throws ParsingException {
         final Matcher m_customInputSettings = ParserCIS.p_customInputSettingsNamed.matcher(source);
@@ -62,7 +63,7 @@ public class CustomInputSettings implements IniFile<CustomInputSettings> {
             throw new ParsingException("The CustomInputSettings does not match with the expected format!", source, ParserCIS.p_customInputSettingsNamed);
         }
         final String s_customInputSettings = m_customInputSettings.group("customInputSettings");
-    
+        
         final Matcher m_actionKeyListNamed = ParserCIS.p_actionKeyListNamed.matcher(s_customInputSettings);
         m_actionKeyListNamed.find();
         final String s_actionKeyList = m_actionKeyListNamed.group();

@@ -59,12 +59,11 @@ public enum IniOptionalValue {
 		this.value = value;
 	}
 	
-	public static IniOptionalValue customize(final IniOptionalValue iniOptionalValue, final Object value) {
+	public static void customize(final IniOptionalValue iniOptionalValue, final Object value) {
 		if (!EnumSet.of(BOOLEAN, INTEGER, DOUBLE, STRING, DOUBLE_QUOTED_STRING).contains(iniOptionalValue)) {
-			return iniOptionalValue;
+			return;
 		}
 		iniOptionalValue.setValue(value);
-		return iniOptionalValue;
 	}
 	
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings("CanBeFinal")
 public class AxisKey extends ClassHelper implements Serializable {
 	
 	@Identity
@@ -27,10 +28,12 @@ public class AxisKey extends ClassHelper implements Serializable {
 		this.keyList = Objects.requireNonNull(keyList);
 	}
 	
+	@SuppressWarnings("unused")
 	public AxisKey(final String axisName, final double scale) {
 		this(axisName, scale, new ArrayList<>());
 	}
 	
+	@SuppressWarnings("unused")
 	public AxisKey() {
 		this(null, 0.0, new ArrayList<>());
 	}

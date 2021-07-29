@@ -31,8 +31,7 @@ public class ActionKey implements IniFile<ActionKey> {
 	
 	@Override
 	public int hashCode() {
-		int result = actionName.hashCode();
-		return result;
+		return actionName.hashCode();
 	}
 	
 	@Override

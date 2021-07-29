@@ -20,12 +20,24 @@ public class IniFileMapperPrivateTest {
 	
 	@Test
 	public void testDeserializeGeneric() {
-	
+		// given
+		
+		// expected
+		
+		// actual
+		
+		// assert
 	}
 	
 	@Test
 	public void testDeserializeValue() {
-	
+		// given
+		
+		// expected
+		
+		// actual
+		
+		// assert
 	}
 	
 	@Test

@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"unused", "CanBeFinal"})
 @IniRoot
 public class CustomInputSettings extends ClassHelper implements Serializable {
 	

@@ -35,7 +35,7 @@ public abstract class ClassHelper {
 
         final Class<? extends ClassHelper> clazz = this.getClass();
 
-        return Arrays.asList(clazz.getFields()).stream()
+        return Arrays.stream(clazz.getFields())
                 .filter(f -> f.isAnnotationPresent(Identity.class))
                 .map(f -> {
                     try {
@@ -52,7 +52,7 @@ public abstract class ClassHelper {
     public int hashCode() {
         final Class<? extends ClassHelper> clazz = this.getClass();
 
-        return Arrays.asList(clazz.getFields()).stream()
+        return Arrays.stream(clazz.getFields())
                 .filter(f -> f.isAnnotationPresent(Identity.class))
                 .map(f -> {
                     try {

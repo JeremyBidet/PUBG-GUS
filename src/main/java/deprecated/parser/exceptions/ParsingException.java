@@ -23,7 +23,7 @@ public class ParsingException extends Exception {
     
     @Override
     public String toString() {
-        return super.toString() + "\nParsingException {" + "\n\tsource='" + source + "\'" + "\n\tpattern=" + pattern + "\n}";
+        return super.toString() + "\n\tsource='" + source + "'" + "\n\tpattern=" + pattern;
     }
     
 }

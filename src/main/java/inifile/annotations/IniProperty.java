@@ -52,12 +52,12 @@ public @interface IniProperty {
      * <br>
      * Note: the pattern is intended to be wrote as a Java regex.<br>
      * <br>
-     * Note: when a {@linkplain IniProperty#pattern() pattern} is given,
-     * we recommend to provide and match a {@linkplain IniProperty#format format} with it.<br>
+     * Note: when a pattern is given, we recommend to provide
+     * and match a {@linkplain IniProperty#format format} with it.<br>
      * <br>
      * Convenient constants are available in {@link IniPropertyPattern} class, such as:
      * <ul>
-     *     <li>{@link IniPropertyPattern#BOOLEAN} {@inheritdoc}</li>
+     *     <li>{@link IniPropertyPattern#BOOLEAN}</li>
      *     <li>{@link IniPropertyPattern#DOUBLE}</li>
      *     <li>{@link IniPropertyPattern#INTEGER}</li>
      *     <li>{@link IniPropertyPattern#WORD}</li>

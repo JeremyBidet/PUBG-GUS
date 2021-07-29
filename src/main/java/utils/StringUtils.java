@@ -24,7 +24,7 @@ public class StringUtils {
     
     public static String removeEnclosingQuotes(final String str) {
         if (str == null) {
-            return str;
+            return null;
         }
         return str.matches("\".*\"") ? str.substring(1, str.length()-1) : str;
     }

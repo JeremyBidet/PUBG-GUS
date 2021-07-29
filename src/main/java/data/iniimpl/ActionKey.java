@@ -9,10 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@SuppressWarnings({"CanBeFinal"})
 public class ActionKey extends ClassHelper implements Serializable {
 	
 	@Identity
-	@IniProperty(name = "ActionName", raw = false)
+	@IniProperty(name = "ActionName")
 	public String actionName;
 	
 	@IniProperty(name = "Keys")
@@ -23,10 +24,12 @@ public class ActionKey extends ClassHelper implements Serializable {
 		this.keyList = Objects.requireNonNull(keyList);
 	}
 	
+	@SuppressWarnings("unused")
 	public ActionKey(final String actionName) {
 		this(actionName, new ArrayList<>());
 	}
 	
+	@SuppressWarnings("unused")
 	public ActionKey() {
 		this(null, new ArrayList<>());
 	}

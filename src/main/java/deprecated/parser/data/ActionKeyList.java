@@ -25,8 +25,7 @@ public class ActionKeyList implements IniFile<ActionKeyList> {
 	
 	@Override
 	public int hashCode() {
-		int result = actionKeyList.hashCode();
-		return result;
+		return actionKeyList.hashCode();
 	}
 	
 	@Override

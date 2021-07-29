@@ -25,8 +25,7 @@ public class AxisKeyList implements IniFile<AxisKeyList> {
 	
 	@Override
 	public int hashCode() {
-		int result = axisKeyList.hashCode();
-		return result;
+		return axisKeyList.hashCode();
 	}
 	
 	@Override

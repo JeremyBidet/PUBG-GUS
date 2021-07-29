@@ -26,7 +26,7 @@ public @interface IniWrapper {
 	 *     <li>{@linkplain IniPropertyWrapper#BRACKET BRACKET} => {@code [...]}</li>
 	 *     <li>{@linkplain IniPropertyWrapper#BRACE BRACE} => {@code {...}}</li>
 	 * </ul>
-	 * @return
+	 * @return the INI property wrapper
 	 */
 	IniPropertyWrapper value() default IniPropertyWrapper.PARENTHESIS;
 	

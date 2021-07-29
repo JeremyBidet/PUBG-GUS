@@ -6,6 +6,7 @@ import fr.whyt.pubg.utils.annotations.Identity;
 
 import java.io.Serializable;
 
+@SuppressWarnings("CanBeFinal")
 public class Key extends ClassHelper implements Serializable {
 	
 	@Identity
@@ -39,18 +40,22 @@ public class Key extends ClassHelper implements Serializable {
 		this(null, false, false, false);
 	}
 	
+	@SuppressWarnings("unused")
 	public static boolean isCtrl(final String bKey) {
 		return "Ctrl".equals(bKey);
 	}
 	
+	@SuppressWarnings("unused")
 	public static boolean isAlt(final String bKey) {
 		return "Alt".equals(bKey);
 	}
 	
+	@SuppressWarnings("unused")
 	public static boolean isShift(final String bKey) {
 		return "Shift".equals(bKey);
 	}
 	
+	@SuppressWarnings("unused")
 	public static String getBKey(final Key key) {
 		if (key.bCtrl) {
 			return "bCtrl";

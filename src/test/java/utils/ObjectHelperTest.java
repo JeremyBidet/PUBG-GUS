@@ -46,7 +46,6 @@ public class ObjectHelperTest {
 		Assertions.assertEquals(expected2, actual2);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void testGetOrDefault_varargs() {
 		// given

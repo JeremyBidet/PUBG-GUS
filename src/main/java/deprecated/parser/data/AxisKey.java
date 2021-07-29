@@ -33,8 +33,7 @@ public class AxisKey implements IniFile<AxisKey> {
     
     @Override
     public int hashCode() {
-        int result = axisName.hashCode();
-        return result;
+        return axisName.hashCode();
     }
     
     @Override

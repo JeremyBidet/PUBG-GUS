@@ -4,9 +4,10 @@ import fr.whyt.pubg.main.Main;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class ParserCIS {
 
-    private static boolean verbose;
+    public static boolean verbose;
     
     static {
         String tmp = Main.properties.get("verbose");
@@ -78,7 +79,7 @@ public class ParserCIS {
     private static final String r_customInputSettings = "^CustomInputSettins=\\(" + p_actionKeyList + "," + p_axisKeyList + "\\)$";
     private static final String r_customInputSettingsNamed = "^CustomInputSettins=\\((?<customInputSettings>" + p_actionKeyList + "," + p_axisKeyList + ")\\)$";
     // Global pattern
-    public static Pattern p_customInputSettings = Pattern.compile(r_customInputSettings);
-    public static Pattern p_customInputSettingsNamed = Pattern.compile(r_customInputSettingsNamed);
+    public static final Pattern p_customInputSettings = Pattern.compile(r_customInputSettings);
+    public static final Pattern p_customInputSettingsNamed = Pattern.compile(r_customInputSettingsNamed);
 
 }

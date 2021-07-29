@@ -38,8 +38,7 @@ public class MouseSensitive {
 
     @Override
     public int hashCode() {
-        int result = mouseSensitiveName.hashCode();
-        return result;
+        return mouseSensitiveName.hashCode();
     }
 
     @Override

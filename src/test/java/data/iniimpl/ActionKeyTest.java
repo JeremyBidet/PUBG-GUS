@@ -6,6 +6,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -13,12 +15,12 @@ public class ActionKeyTest {
 	
 	@ParameterizedTest
 	@MethodSource("dataProvider")
-	public void testDeserialize(final String provided, final ActionKey expected) {
+	public void testDeserialize(final Path provided, final ActionKey expected) throws IOException, ClassNotFoundException {
 		// actual
-		//final ActionKey actual = IniFileMapper.deserialize(provided, ActionKey.class);
+		final ActionKey actual = IniFileMapper.deserialize(provided, ActionKey.class);
 		
 		// assert
-		//Assertions.assertEquals(expected, actual);
+		Assertions.assertEquals(expected, actual);
 	}
 	
 	@ParameterizedTest

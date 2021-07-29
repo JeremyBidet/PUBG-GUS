@@ -4,7 +4,7 @@ import fr.whyt.pubg.deprecated.parser.IniFile;
 
 public class WritingException extends Exception {
     
-    public final IniFile<? extends IniFile> serializable;
+    public final IniFile<? extends IniFile<?>> serializable;
     
     /**
      * Constructs a new exception with the specified detail message.
@@ -13,7 +13,7 @@ public class WritingException extends Exception {
      *                later retrieval by the {@link #getMessage()} method.
      * @param serializable the serializable class (implementing {@link IniFile})
      */
-    public WritingException(final String message, final IniFile<? extends IniFile> serializable) {
+    public WritingException(final String message, final IniFile<? extends IniFile<?>> serializable) {
         super(message);
         this.serializable = serializable;
     }
