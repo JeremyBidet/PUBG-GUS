@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public class Main extends Application {
 
     public static final Map<String, String> properties;
@@ -20,7 +21,7 @@ public class Main extends Application {
     static {
         properties = new HashMap<>();
         final URL url = ClassLoader.getSystemResource("properties.config");
-        //Object o = JSONFunctions.parse(url.getPath(), null);
+        //Object o = JSONFunction.parse(url.getPath(), null);
     }
 
     @Override

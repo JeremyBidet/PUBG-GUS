@@ -62,6 +62,7 @@ public class AxisKeyList implements IniFile<AxisKeyList> {
 		return axisKeyList;
 	}
 	
+	@SuppressWarnings("RedundantThrows")
 	@Override
 	public String serialize() throws WritingException {
 		return "AxisKeyList=("

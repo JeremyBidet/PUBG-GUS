@@ -33,7 +33,7 @@ import java.util.stream.StreamSupport;
  * <br>
  * <b>Important:</b> the Java classes designed to be deserialized should implements {@link Serializable},
  * and so on, implements a <b>public no-args constructor</b>.<br>
- * Also, nowaday, the current version of this INI mapper does not use any getter/setter,
+ * Also, nowadays, the current version of this INI mapper does not use any getter/setter,
  * so the field members of these classes have to be <b>public</b> and <b>not final</b>
  */
 public class IniFileMapper {

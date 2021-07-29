@@ -74,6 +74,7 @@ public class Key implements IniFile<Key> {
         return new Key(key, isCtrl(bKey), isAlt(bKey), isShift(bKey));
     }
     
+    @SuppressWarnings("RedundantThrows")
     @Override
     public String serialize() throws WritingException {
         return "("

@@ -41,11 +41,11 @@ public @interface IniOptional {
 	 * Note: once {@linkplain IniOptionalValue#customize custom} is called, it will modify the default value for each occurrence of this enum value.<br>
 	 * <br>
 	 * For example:<br>
-	 * given an optional integer property named {@code diviser},
+	 * given an optional integer property named {@code divisor},
 	 * valid values are negative or positive, but not zero (division by 0 is impossible).<br>
-	 * We don't need to serialize the {@code diviser=0} property because it's invalid.
+	 * We don't need to serialize the {@code divisor=0} property because it's invalid.
 	 * Then we should use the {@linkplain IniOptionalValue#INTEGER_0 INTEGER_0} value for the annotation value.<br>
-	 * In other words, when the Java field {@code int diviser = 0}, we won't serialize this property.<br>
+	 * In other words, when the Java field {@code int divisor = 0}, we won't serialize this property.<br>
 	 * For deserialization, the Java field will be set to 0.<br>
 	 *<br>
 	 * @return the value used to replace the default value

@@ -2,6 +2,7 @@ package fr.whyt.pubg.inifile.core;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class IniPropertyPattern {
 	
 	// Useful patterns for format option in IniProperty annotation

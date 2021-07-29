@@ -62,6 +62,7 @@ public class ActionKeyList implements IniFile<ActionKeyList> {
 		return actionKeyList;
 	}
 	
+	@SuppressWarnings("RedundantThrows")
 	@Override
 	public String serialize() throws WritingException {
 		return "ActionKeyList=("

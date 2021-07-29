@@ -40,6 +40,7 @@ public class StringUtilsTest {
 		Assertions.assertTrue(StringUtils.isEmpty(provided3));
 	}
 	
+	@SuppressWarnings("SpellCheckingInspection")
 	@Test
 	public void testRemoveEnclosingQuotes() {
 		// given

@@ -1,5 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="EntryPointsManager">
+    <entry_points version="2.0">
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.data.iniimpl.ActionKey actionName" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.data.iniimpl.ActionKey keyList" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.data.iniimpl.AxisKey axisName" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.data.iniimpl.AxisKey keyList" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.data.iniimpl.AxisKey scale" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.utils.ClassHelperTest.B key2" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.utils.ClassHelperTest.A key3" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.utils.ClassHelperTest.B key3" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.inifile.core.IniOptionalValue BOOLEAN_TRUE" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.inifile.core.IniOptionalValue DOUBLE_0" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.inifile.core.IniOptionalValue DOUBLE_QUOTED_STRING_EMPTY" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.inifile.core.IniOptionalValue INTEGER_0" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.inifile.core.IniOptionalValue STRING_EMPTY" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.data.iniimpl.Key key" />
+      <entry_point TYPE="field" FQNAME="fr.whyt.pubg.deprecated.parser.WriterCIS verbose" />
+    </entry_points>
+    <pattern value="fr.whyt.pubg.inifile.exceptions.WritingException" method="WritingException" />
+    <pattern value="fr.whyt.pubg.utils.AssertionsHelper" />
+    <pattern value="fr.whyt.pubg.utils.AssertionsHelper" method="assertObjectEquals" />
+    <pattern value="fr.whyt.pubg.data.iniimpl.AxisKey" />
+    <pattern value="fr.whyt.pubg.utils.ClassHelperTest.A" />
+    <pattern value="fr.whyt.pubg.utils.ClassHelperTest.B" />
+    <pattern value="fr.whyt.pubg.utils.ClassHelperTest" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.IniFile" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.IniFile" method="serialize" />
+    <pattern value="fr.whyt.pubg.inifile.core.IniOptionalValue" />
+    <pattern value="fr.whyt.pubg.inifile.core.IniPropertyWrapper" />
+    <pattern value="fr.whyt.pubg.inifile.core.IniPropertyWrapper" method="wrap" />
+    <pattern value="fr.whyt.pubg.data.iniimpl.Key" />
+    <pattern value="fr.whyt.pubg.data.resources.ListComplex" />
+    <pattern value="fr.whyt.pubg.data.resources.ListComplex" method="ListComplex" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.data.MouseSensitive" method="getLastConvertedMouseSensitivity" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.data.MouseSensitive" method="getMouseSensitiveName" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.data.MouseSensitive" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.data.MouseSensitive" method="MouseSensitive" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.data.MouseSensitive" method="setLastConvertedMouseSensitivity" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.data.MouseSensitive" method="setMouseSensitiveName" />
+    <pattern value="fr.whyt.pubg.data.resources.ObjectNested.Level1" />
+    <pattern value="fr.whyt.pubg.data.resources.ObjectNested.Level1" method="Level1" />
+    <pattern value="fr.whyt.pubg.data.resources.ObjectNested.Level2" />
+    <pattern value="fr.whyt.pubg.data.resources.ObjectNested.Level2" method="Level2" />
+    <pattern value="fr.whyt.pubg.data.resources.ObjectNested.Level3" />
+    <pattern value="fr.whyt.pubg.data.resources.ObjectNested.Level3" method="Level3" />
+    <pattern value="fr.whyt.pubg.data.resources.ObjectNested" />
+    <pattern value="fr.whyt.pubg.data.resources.ObjectNested" method="ObjectNested" />
+    <pattern value="fr.whyt.pubg.data.resources.Root" />
+    <pattern value="fr.whyt.pubg.data.resources.Root" method="Root" />
+    <pattern value="fr.whyt.pubg.deprecated.parser.WriterCIS" />
+    <pattern value="fr.whyt.pubg.data.resources.ListSimple" />
+    <pattern value="fr.whyt.pubg.data.resources.ListSimple" method="ListSimple" />
+  </component>
   <component name="ProjectKey">
     <option name="state" value="project://e79810c8-c5c8-43b1-b19c-90c1f4095425" />
   </component>

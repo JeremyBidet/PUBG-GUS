@@ -22,4 +22,5 @@ public class WritingException extends Exception {
     public String toString() {
         return super.toString() + "\nWritingException {" + "\n\tclass=" + serializable + "\n}";
     }
+    
 }

@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-@SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored", "unused"})
 public class IniPropertyPatternTest {
 	
 	@Test
@@ -512,13 +512,14 @@ public class IniPropertyPatternTest {
 		}
 	}
 	
+	@SuppressWarnings("SpellCheckingInspection")
 	private static Stream<Arguments> regexFailProvider() {
 		return Stream.of(
-				Arguments.of(IniPropertyPattern.BOOLEAN, Arrays.asList("zeffs", "", null)),
+				Arguments.of(IniPropertyPattern.BOOLEAN, Arrays.asList("refs", "", null)),
 				Arguments.of(IniPropertyPattern.DOUBLE, Arrays.asList("100", "", null)),
 				Arguments.of(IniPropertyPattern.INTEGER, Arrays.asList("100.0", "", null)),
 				Arguments.of(IniPropertyPattern.WORD, Arrays.asList("\"100\"", "", null)),
-				Arguments.of(IniPropertyPattern.DOUBLE_QUOTED_WORD, Arrays.asList("100", "qsdq", null)),
+				Arguments.of(IniPropertyPattern.DOUBLE_QUOTED_WORD, Arrays.asList("100", "seq", null)),
 				// FIXME: the commented string should fail, but for an obscure reason the regex matches
 				Arguments.of(IniPropertyPattern.STRING, Arrays.asList(/*"\"abc\\\"$'_-\"",*/ "", null)),
 				Arguments.of(IniPropertyPattern.DOUBLE_QUOTED_STRING, Arrays.asList("\\\"grz\"'ééfé\\\"", "", null))
