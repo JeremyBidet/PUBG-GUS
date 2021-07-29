@@ -114,6 +114,10 @@ public class ClassUtilsTest {
 		final String charProvided = "c";
 		final String stringProvided = "test";
 		final String optionalProvided = "Optional.of(true)";
+		final String nullIntProvided = null;
+		final String nullIntegerProvided = null;
+		final String nullStringProvided = null;
+		final String emptyStringProvided = "";
 		
 		// expected
 		final int intExpected = 0;
@@ -133,6 +137,10 @@ public class ClassUtilsTest {
 		final Character characterExpected = 'c';
 		final char charExpected = 'c';
 		final String stringExpected = "test";
+		final int nullIntExpected = 0;
+		final Integer nullIntegerExpected = null;
+		final String nullStringExpected = null;
+		final String emptyStringExpected = "";
 		
 		// actual
 		final int intActual = ClassUtils.convert(int.class, intProvided);
@@ -153,6 +161,10 @@ public class ClassUtilsTest {
 		final char charActual  = ClassUtils.convert(char.class, charProvided);
 		final String stringActual  = ClassUtils.convert(String.class, stringProvided);
 		final Executable optionalActual = () -> ClassUtils.convert(Optional.class, optionalProvided);
+		final int nullIntActual = ClassUtils.convert(int.class, nullIntProvided);
+		final Integer nullIntegerActual = ClassUtils.convert(Integer.class, nullIntegerProvided);
+		final String nullStringActual = ClassUtils.convert(String.class, nullStringProvided);
+		final String emptyStringActual = ClassUtils.convert(String.class, emptyStringProvided);
 		
 		// assert
 		Assertions.assertEquals(intExpected, intActual);
@@ -173,41 +185,47 @@ public class ClassUtilsTest {
 		Assertions.assertEquals(charExpected, charActual);
 		Assertions.assertEquals(stringExpected, stringActual);
 		Assertions.assertThrows(UnsupportedOperationException.class, optionalActual);
+		Assertions.assertEquals(nullIntExpected, nullIntActual);
+		Assertions.assertEquals(nullIntegerExpected, nullIntegerActual);
+		Assertions.assertEquals(nullStringExpected, nullStringActual);
+		Assertions.assertEquals(emptyStringExpected, emptyStringActual);
 	}
 	
 	@Test
 	public void testNewCollection() {
 		// given
-		final Class<Iterable> iterableProvided = Iterable.class;
 		final Class<Collection> collectionProvided = Collection.class;
 		final Class<List> listProvided = List.class;
 		final Class<Set> setProvided = Set.class;
 		final Class<SortedSet> sortedSetProvided = SortedSet.class;
 		final Class<Queue> queueProvided = Queue.class;
 		
+		final List untypedList = Collections.emptyList();
+		final Class<List> untypedListProvided = (Class<List>) untypedList.getClass();
+		
 		// expected
-		final Iterable iterableExpected = new ArrayList();
-		final Iterable collectionExpected = new ArrayList();
-		final Iterable listExpected = new ArrayList();
-		final Iterable setExpected = new HashSet();
-		final Iterable sortedSetExpected = new HashSet();
-		final Iterable queueExpected = new LinkedList();
+		final Collection<Integer> collectionExpected = new ArrayList<>();
+		final Collection<Integer> listExpected = new ArrayList<>();
+		final Collection<Integer> setExpected = new HashSet<>();
+		final Collection<Integer> sortedSetExpected = new HashSet<>();
+		final Collection<Integer> queueExpected = new LinkedList<>();
+		final Collection<?> untypedListExpected = new LinkedList<>();
 		
 		// actual
-		final Iterable iterableActual  = ClassUtils.newCollection(iterableProvided);
-		final Iterable collectionsActual  = ClassUtils.newCollection(collectionProvided);
-		final Iterable listActual  = ClassUtils.newCollection(listProvided);
-		final Iterable setActual  = ClassUtils.newCollection(setProvided);
-		final Iterable sortedSetActual  = ClassUtils.newCollection(sortedSetProvided);
-		final Iterable queueActual  = ClassUtils.newCollection(queueProvided);
+		final Collection<Integer> collectionsActual  = ClassUtils.newCollection(collectionProvided);
+		final Collection<Integer> listActual  = ClassUtils.newCollection(listProvided);
+		final Collection<Integer> setActual  = ClassUtils.newCollection(setProvided);
+		final Collection<Integer> sortedSetActual  = ClassUtils.newCollection(sortedSetProvided);
+		final Collection<Integer> queueActual  = ClassUtils.newCollection(queueProvided);
+		final Collection<?> untypedListActual  = ClassUtils.newCollection(untypedListProvided);
 		
 		// assert
-		Assertions.assertEquals(iterableExpected, iterableActual);
 		Assertions.assertEquals(collectionExpected, collectionsActual);
 		Assertions.assertEquals(listExpected, listActual);
 		Assertions.assertEquals(setExpected, setActual);
 		Assertions.assertEquals(sortedSetExpected, sortedSetActual);
 		Assertions.assertEquals(queueExpected, queueActual);
+		Assertions.assertEquals(untypedListExpected, untypedListActual);
 	}
 	
 	@Test
@@ -232,24 +250,24 @@ public class ClassUtilsTest {
 		final char charProvided = 'a';
 		
 		// expected
-		final Integer intExpected = 123;
-		final Long longExpected = 456L;
-		final Short shortExpected = 789;
-		final Double doubleExpected = -123.0;
-		final Float floatExpected = -456F;
-		final Boolean booleanExpected = true;
-		final Byte byteExpected = 9;
-		final Character charExpected = 'a';
+		final int intExpected = 123;
+		final long longExpected = 456L;
+		final short shortExpected = 789;
+		final double doubleExpected = -123.0;
+		final float floatExpected = -456F;
+		final boolean booleanExpected = true;
+		final byte byteExpected = 9;
+		final char charExpected = 'a';
 		
 		// actual
-		final Integer intActual  = (Integer) ClassUtils.newPrimitive(intClassProvided, intProvided);
-		final Long longActual  = (Long) ClassUtils.newPrimitive(longClassProvided, longProvided);
-		final Short shortActual  = (Short) ClassUtils.newPrimitive(shortClassProvided, shortProvided);
-		final Double doubleActual  = (Double) ClassUtils.newPrimitive(doubleClassProvided, doubleProvided);
-		final Float floatActual  = (Float) ClassUtils.newPrimitive(floatClassProvided, floatProvided);
-		final Boolean booleanActual  = (Boolean) ClassUtils.newPrimitive(booleanClassProvided, booleanProvided);
-		final Byte byteActual  = (Byte) ClassUtils.newPrimitive(byteClassProvided, byteProvided);
-		final Character charActual  = (Character) ClassUtils.newPrimitive(charClassProvided, charProvided);
+		final int intActual = ClassUtils.newPrimitive(intClassProvided, intProvided);
+		final long longActual = ClassUtils.newPrimitive(longClassProvided, longProvided);
+		final short shortActual = ClassUtils.newPrimitive(shortClassProvided, shortProvided);
+		final double doubleActual = ClassUtils.newPrimitive(doubleClassProvided, doubleProvided);
+		final float floatActual = ClassUtils.newPrimitive(floatClassProvided, floatProvided);
+		final boolean booleanActual = ClassUtils.newPrimitive(booleanClassProvided, booleanProvided);
+		final byte byteActual = ClassUtils.newPrimitive(byteClassProvided, byteProvided);
+		final char charActual = ClassUtils.newPrimitive(charClassProvided, charProvided);
 		
 		// assert
 		Assertions.assertEquals(intExpected, intActual);
@@ -275,24 +293,24 @@ public class ClassUtilsTest {
 		final Class charProvided = char.class;
 		
 		// expected
-		final Integer intExpected = 0;
-		final Long longExpected = 0L;
-		final Short shortExpected = 0;
-		final Double doubleExpected = 0.;
-		final Float floatExpected = 0F;
-		final Boolean booleanExpected = false;
-		final Byte byteExpected = 0;
-		final Character charExpected = '\0';
+		final int intExpected = 0;
+		final long longExpected = 0L;
+		final short shortExpected = 0;
+		final double doubleExpected = 0.;
+		final float floatExpected = 0F;
+		final boolean booleanExpected = false;
+		final byte byteExpected = 0;
+		final char charExpected = '\0';
 		
 		// actual
-		final Integer intActual  = (Integer) ClassUtils.newPrimitive(intProvided);
-		final Long longActual  = (Long) ClassUtils.newPrimitive(longProvided);
-		final Short shortActual  = (Short) ClassUtils.newPrimitive(shortProvided);
-		final Double doubleActual  = (Double) ClassUtils.newPrimitive(doubleProvided);
-		final Float floatActual  = (Float) ClassUtils.newPrimitive(floatProvided);
-		final Boolean booleanActual  = (Boolean) ClassUtils.newPrimitive(booleanProvided);
-		final Byte byteActual  = (Byte) ClassUtils.newPrimitive(byteProvided);
-		final Character charActual  = (Character) ClassUtils.newPrimitive(charProvided);
+		final int intActual = (int) ClassUtils.newPrimitive(intProvided);
+		final long longActual = (long) ClassUtils.newPrimitive(longProvided);
+		final short shortActual = (short) ClassUtils.newPrimitive(shortProvided);
+		final double doubleActual = (double) ClassUtils.newPrimitive(doubleProvided);
+		final float floatActual = (float) ClassUtils.newPrimitive(floatProvided);
+		final boolean booleanActual = (boolean) ClassUtils.newPrimitive(booleanProvided);
+		final byte byteActual = (byte) ClassUtils.newPrimitive(byteProvided);
+		final char charActual = (char) ClassUtils.newPrimitive(charProvided);
 		
 		// assert
 		Assertions.assertEquals(intExpected, intActual);

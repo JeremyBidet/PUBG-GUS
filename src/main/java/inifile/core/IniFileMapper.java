@@ -17,10 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -40,6 +37,9 @@ import java.util.stream.StreamSupport;
  * so the field members of these classes have to be <b>public</b> and <b>not final</b>
  */
 public class IniFileMapper {
+	
+	private static final IniPropertyWrapper DEFAULT_LIST_WRAPPER = IniPropertyWrapper.BRACKET;
+	private static final IniPropertyWrapper DEFAULT_OBJECT_WRAPPER = IniPropertyWrapper.PARENTHESIS;
 	
 	// DESERIALIZER
 	
@@ -85,8 +85,6 @@ public class IniFileMapper {
 		
 		final T object;
 		try {
-			// Beware: the Java class representing this object type must have an empty default constructor,
-			// and members have to be public and must not be final
 			object = type.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException instantiationException) {
 			instantiationException.printStackTrace();
@@ -116,7 +114,7 @@ public class IniFileMapper {
 				
 				final Class<?> fieldType = field.getType();
 				
-				Object convertedValue = null;
+				Object convertedValue;
 				try {
 					convertedValue = deserializeGeneric(field, fieldType, rawValue);
 				} catch (ParsingException | ClassNotFoundException e) {
@@ -146,11 +144,12 @@ public class IniFileMapper {
 	 *
 	 * @return the Java class instance with parsed value
 	 */
+	// FIXME: public for tests purpose, should be private
 	public static <T> T deserializeGeneric(final Field field, Class<T> fieldType, final String rawValue)
 			throws ParsingException, ClassNotFoundException {
 		final Kind fieldKind = ClassUtils.getKind(fieldType);
 		
-		final IniProperty property = fieldType.getAnnotation(IniProperty.class);
+		final IniProperty property = field.getAnnotation(IniProperty.class);
 		
 		if (fieldKind == Kind.PRIMITIVE || fieldKind == Kind.BOXED) {
 			String value = rawValue;
@@ -166,25 +165,38 @@ public class IniFileMapper {
 					throw new ParsingException("Cannot parse the value! The pattern does not match the value", value, pattern);
 				}
 			}
+			
 			final Object convertedValue = deserializeValue(fieldType, value);
 			return fieldType.cast(convertedValue);
 		}
 		
 		if (fieldKind == Kind.ITERABLE) {
-			IniPropertyWrapper wrapper = IniPropertyWrapper.PARENTHESIS;
-			final IniWrapper objectWrapper = fieldType.getDeclaredAnnotation(IniWrapper.class);
-			if (objectWrapper != null) {
-				wrapper = objectWrapper.value();
+			IniPropertyWrapper iterableWrapper = DEFAULT_LIST_WRAPPER;
+			if (fieldType.isAnnotationPresent(IniWrapper.class)) {
+				iterableWrapper = fieldType.getDeclaredAnnotation(IniWrapper.class).value();
 			}
 			
 			final Class<?> elementType = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+			IniPropertyWrapper elementWrapper = DEFAULT_OBJECT_WRAPPER;
+			if (elementType.isAnnotationPresent(IniWrapper.class)) {
+				elementWrapper = elementType.getDeclaredAnnotation(IniWrapper.class).value();
+			} else {
+				final Kind elementKind = ClassUtils.getKind(elementType);
+				if (elementKind == Kind.PRIMITIVE || elementKind == Kind.BOXED) {
+					elementWrapper = null;
+				}
+				if (elementKind == Kind.ITERABLE) {
+					elementWrapper = DEFAULT_LIST_WRAPPER;
+				}
+			}
 			
-			final Iterable<?> iterable = deserializeIterable(field, fieldType, elementType, wrapper, rawValue);
+			@SuppressWarnings({"unchecked", "rawtypes"})
+			final Iterable<?> iterable = deserializeIterable(field, (Class<Collection>) fieldType, iterableWrapper, elementType, elementWrapper, rawValue);
 			return fieldType.cast(iterable);
 		}
 		
 		// else it's an object
-		IniPropertyWrapper wrapper = IniPropertyWrapper.PARENTHESIS;
+		IniPropertyWrapper wrapper = DEFAULT_OBJECT_WRAPPER;
 		final IniWrapper objectWrapper = fieldType.getDeclaredAnnotation(IniWrapper.class);
 		if (objectWrapper != null) {
 			wrapper = objectWrapper.value();
@@ -208,30 +220,47 @@ public class IniFileMapper {
 	/**
 	 * Deserialize an INI list in Java collection.<br>
 	 *
-	 * @param <T>          the java type of the collection
-	 * @param <U>          the java type of the collection elements
-	 * @param field        the java field associated with the object
-	 * @param iterableType the java class type of collection
-	 * @param elementType  the java class type of the deserialized value
-	 * @param wrapper      the wrapper enclosing the list
-	 * @param rawValue     the whole INI object containing the list
+	 * @param <T>             the java type of the collection
+	 * @param <U>             the java type of the collection elements
+	 * @param field           the java field associated with the object
+	 * @param iterableType    the java class type of collection
+	 * @param iterableWrapper the wrapper enclosing the list
+	 * @param elementType     the java class type of the deserialized value
+	 * @param elementWrapper  the wrapper enclosing the list
+	 * @param rawValue        the whole INI object containing the list
 	 * @return the deserialized INI list.
 	 */
-	private static <T, U> Iterable<U> deserializeIterable(final Field field,
-	                                                      final Class<T> iterableType,
-	                                                      final Class<U> elementType,
-	                                                      final IniPropertyWrapper wrapper,
-	                                                      final String rawValue)
+	private static <T extends Collection<U>, U>
+			Collection<U> deserializeIterable(final Field field,
+			                                  final Class<T> iterableType,
+			                                  final IniPropertyWrapper iterableWrapper,
+			                                  final Class<U> elementType,
+			                                  final IniPropertyWrapper elementWrapper,
+			                                  final String rawValue)
 			throws ParsingException, ClassNotFoundException {
-		@SuppressWarnings("unchecked")
-		final Collection<U> values = (Collection<U>) ClassUtils.newCollection(iterableType);
+		final Collection<U> values = ClassUtils.newCollection(iterableType);
 		
 		if (StringUtils.isBlank(rawValue)) {
 			throw new ParsingException("Null lists are not authorized", rawValue, null);
 		}
 		
-		if (rawValue.equals("" + wrapper.head + wrapper.tail)) {
+		if (iterableWrapper == null) {
+			throw new ParsingException("Cannot parse a list without enclosing wrapper!", rawValue, null);
+		}
+		
+		if (rawValue.equals("" + iterableWrapper.head + iterableWrapper.tail)) {
 			return values;
+		}
+		
+		final Set<Character> headWrappers = new HashSet<>();
+		final Set<Character> tailWrappers = new HashSet<>();
+		
+		headWrappers.add(iterableWrapper.head);
+		tailWrappers.add(iterableWrapper.tail);
+		
+		if (elementWrapper != null) {
+			headWrappers.add(elementWrapper.head);
+			tailWrappers.add(elementWrapper.tail);
 		}
 		
 		final String valueStart = rawValue.substring(1);
@@ -239,8 +268,8 @@ public class IniFileMapper {
 		final StringBuilder stringBuilder = new StringBuilder();
 		int cpt = 1;
 		for (final char c : valueStart.toCharArray()) {
-			if (c == wrapper.head) { cpt++; }
-			if (c == wrapper.tail) { cpt--; }
+			if (headWrappers.contains(c)) { cpt++; }
+			if (tailWrappers.contains(c)) { cpt--; }
 			// if list end has been reached
 			if (cpt == 0) {
 				// the last element or the first (and unique for singleton list)
@@ -304,8 +333,6 @@ public class IniFileMapper {
 		
 		final T object;
 		try {
-			// Beware: the Java class representing this object type must have an empty default constructor,
-			// and members have to be public and must not be final
 			object = valueType.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException instantiationException) {
 			instantiationException.printStackTrace();
@@ -347,9 +374,9 @@ public class IniFileMapper {
 				
 				final Class<?> fieldType = field.getType();
 				
-				Object convertedValue = null;
+				final Object convertedValue;
 				try {
-					convertedValue = deserializeGeneric(field, fieldType, rawValue);
+					convertedValue = deserializeGeneric(field, fieldType, value);
 				} catch (ParsingException e) {
 					e.printStackTrace();
 					continue;
@@ -391,7 +418,7 @@ public class IniFileMapper {
 		final BinaryOperator<String> joiner = isRoot ? StringUtils::joinLN : StringUtils::joinComma;
 		
 		//noinspection UnnecessaryLocalVariable
-		final String data = Arrays.asList(object.getClass().getDeclaredFields()).stream()
+		final String data = Arrays.stream(object.getClass().getDeclaredFields())
 				.filter(f -> f.isAnnotationPresent(IniProperty.class))
 				.map(field -> {
 					final IniProperty iniProperty = field.getAnnotation(IniProperty.class);
@@ -403,27 +430,9 @@ public class IniFileMapper {
 					Object value;
 					try {
 						value = field.get(object);
-						
 						if (optional) {
-							final Class<?> fieldType = field.getType();
-							final Kind fieldKind = ClassUtils.getKind(fieldType);
-							
-							Object fieldDefaultValue = null;
-							try {
-								if (fieldKind == Kind.PRIMITIVE) {
-									fieldDefaultValue = ClassUtils.newPrimitive(fieldType);
-								} else {
-									fieldDefaultValue = fieldType.getConstructor().newInstance();
-								}
-								if (field.isAnnotationPresent(IniOptional.class)) {
-									final IniOptional iniOptionalProp = field.getAnnotation(IniOptional.class);
-									final IniOptionalValue optionalValue = iniOptionalProp.value();
-									fieldDefaultValue = ClassUtils.convert(fieldType, optionalValue.getValue().toString());
-								}
-							} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-								e.printStackTrace();
-							}
-							if (Objects.equals(value, fieldDefaultValue)) {
+							Object fieldOptionalValue = getFieldOptionalValue(field);
+							if (Objects.equals(value, fieldOptionalValue)) {
 								return null;
 							}
 						}
@@ -432,7 +441,7 @@ public class IniFileMapper {
 						value = null;
 					}
 					
-					return name + "=" + serialize(value, format, raw);
+					return name + "=" + serializeGeneric(value, format, raw);
 				})
 			    .filter(Objects::nonNull)
 				.reduce(joiner)
@@ -454,7 +463,7 @@ public class IniFileMapper {
 	 *
 	 * @return the serialized object
 	 */
-	private static <T> String serialize(final T object, final String format, final boolean raw) {
+	private static <T> String serializeGeneric(final T object, final String format, final boolean raw) {
 		if (object == null) {
 			return "";
 		}
@@ -476,13 +485,35 @@ public class IniFileMapper {
 			Iterable<?> values = (Iterable<?>) object;
 			return "("
 				       + StreamSupport.stream(values.spliterator(), false)
-						         .map(value -> IniFileMapper.serialize(value, format, false))
+						         .map(value -> IniFileMapper.serializeGeneric(value, format, false))
 						         .reduce(StringUtils::joinComma)
 						         .orElse("")
 			       + ")";
 		}
 		
 		return "(" + serialize(object) + ")";
+	}
+	
+	/**
+	 * Get the associated optional value for this field, if any,
+	 * or the default optional value {@code null}.<br>
+	 * <br>
+	 * @param field the field to get the optional value
+	 * @return the optional value converted in this field type
+	 */
+	private static Object getFieldOptionalValue(final Field field) {
+		final Class<?> fieldType = field.getType();
+		
+		IniOptionalValue optionalValue = IniOptionalValue.NULL;
+		if (field.isAnnotationPresent(IniOptional.class)) {
+			final IniOptional iniOptionalProp = field.getAnnotation(IniOptional.class);
+			optionalValue = iniOptionalProp.value();
+		}
+		
+		@SuppressWarnings({"UnnecessaryLocalVariable"})
+		final Object fieldDefaultValue = ClassUtils.convert(fieldType, optionalValue.getValue().toString());
+		
+		return fieldDefaultValue;
 	}
 	
 }

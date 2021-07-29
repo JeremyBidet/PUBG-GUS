@@ -22,25 +22,25 @@ public class IniPropertyPattern {
 	/**
 	 * abc-DEF_012
 	 */
-	public static final String WORD = "[\\w\\-]+";
+	public static final String WORD = "[a-zA-Z][\\w\\-]*";
 	/**
 	 * All characters excepted {@code \r} (carriage return) and {@code \n} (line return).<br>
 	 * Double quote {@code "} should be escaped {@code \"}.<br>
 	 * <br>
 	 * Note: in Java double quote is already escaped in strings {@code \"}, so please use double escape {@code \\\"}
 	 */
-	public static final String STRING = "(\\\"|[^\"\r\n])+";
+	public static final String STRING = "(?:\\\"|[^\"\r\n])+";
 	/**
 	 * Like {@linkplain IniPropertyPattern#WORD WORD} but with enclosing double quote {@code "word"}.
 	 */
-	public static final String DOUBLE_QUOTED_WORD = "\"(" + WORD + ")?\"";
+	public static final String DOUBLE_QUOTED_WORD = "\"((?:" + WORD + ")?)\"";
 	/**
 	 * Like {@linkplain IniPropertyPattern#STRING STRING} but with enclosing double quote {@code "string"}.
 	 */
-	public static final String DOUBLE_QUOTED_STRING = "\"(" + STRING + ")?\"";
+	public static final String DOUBLE_QUOTED_STRING = "\"((?:" + STRING + ")?)\"";
 	
 	
-	// Regex and pattern used in the mapper IniFileMapper
+	// Local regex and pattern used in the mapper IniFileMapper
 	
 	static final char list_separator = ',';
 	static final char object_key_value_separator = ',';

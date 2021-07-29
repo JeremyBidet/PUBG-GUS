@@ -7,6 +7,7 @@ import java.util.*;
  */
 public class ClassUtils {
     
+    @SuppressWarnings("rawtypes")
     private static final List<Class> boxeds = List.of(
             Integer.class, Long.class, Short.class,
             Double.class, Float.class,
@@ -14,6 +15,7 @@ public class ClassUtils {
             String.class, Character.class
     );
     
+    @SuppressWarnings("rawtypes")
     private static final List<Class> iterables = List.of(
             Iterable.class, Collection.class,
             List.class, Set.class, SortedSet.class, Queue.class
@@ -71,12 +73,17 @@ public class ClassUtils {
      * @param value the value to convert
      * @param <T> the result type of the conversion
      * @return the value converted
-     * @throws UnsupportedOperationException
-     * @throws ClassCastException
+     * @throws ClassCastException throw when unable to cast value to type T
      */
     @SuppressWarnings("unchecked")
-    public static <T> T convert(final Class<T> type, final String value) throws UnsupportedOperationException, ClassCastException {
+    public static <T> T convert(final Class<T> type, final String value) throws ClassCastException {
         if (StringUtils.isEmpty(value)) {
+            if (type.isAssignableFrom(String.class)) {
+                return type.cast(value);
+            }
+            if (type.isPrimitive()) {
+                return newPrimitive(type);
+            }
             return null;
         }
         
@@ -105,13 +112,15 @@ public class ClassUtils {
     }
     
     /**
-     * Create an instance of a given collection type
-     * @param type the collection type
-     * @param <T> the type to instantiate
-     * @return the new collection instance
+     * Create an instance of a given collection type.<br>
+     * <br>
+     * @param collectionType the collection type
+     * @param <T> the collection type to instantiate
+     * @param <U> the element type of the collection
+     * @return the new empty collection instance
      */
-    public static <T> Collection<T> newCollection(final Class<T> type) {
-        switch (type.getSimpleName()) {
+    public static <T extends Collection<U>, U> Collection<U> newCollection(final Class<T> collectionType) {
+        switch (collectionType.getSimpleName()) {
             case "Queue":       return new LinkedList<>();
             case "Set":
             case "SortedSet":   return new HashSet<>();
@@ -130,16 +139,17 @@ public class ClassUtils {
      * @param <T> the primitive type
      * @return the value as primitive
      */
-    public static <T> Object newPrimitive(final Class<T> type, final T value) {
+    @SuppressWarnings("unchecked")
+    public static <T> T newPrimitive(final Class<T> type, final T value) {
         switch (type.getSimpleName()) {
-            case "int": return (int) value;
-            case "boolean": return (boolean) value;
-            case "char": return (char) value;
-            case "double": return (Double) value;
-            case "float": return (float) value;
-            case "long": return (long) value;
-            case "short": return (short) value;
-            case "byte": return (byte) value;
+            case "int": return (T) Integer.valueOf((int) value);
+            case "boolean": return (T) Boolean.valueOf((boolean) value);
+            case "char": return (T) Character.valueOf((char) value);
+            case "double": return (T) Double.valueOf((double) value);
+            case "float": return (T) Float.valueOf((float) value);
+            case "long": return (T) Long.valueOf((long) value);
+            case "short": return (T) Short.valueOf((short) value);
+            case "byte": return (T) Byte.valueOf((byte) value);
             default: return null;
         }
     }
@@ -151,16 +161,17 @@ public class ClassUtils {
      * @param <T> the primitive type
      * @return the primitive default value
      */
-    public static <T> Object newPrimitive(final Class<T> type) {
+    @SuppressWarnings("unchecked")
+    public static <T> T newPrimitive(final Class<T> type) {
         switch (type.getSimpleName()) {
-            case "int": return 0;
-            case "boolean": return false;
-            case "char": return '\0';
-            case "double": return 0.;
-            case "float": return 0F;
-            case "long": return 0L;
-            case "short": return (short) 0;
-            case "byte": return (byte) 0;
+            case "int": return (T) Integer.valueOf(0);
+            case "boolean": return (T) Boolean.valueOf(false);
+            case "char": return (T) Character.valueOf('\0');
+            case "double": return (T) Double.valueOf(0.);
+            case "float": return (T) Float.valueOf(0F);
+            case "long": return (T) Long.valueOf(0L);
+            case "short": return (T) Short.valueOf((short) 0);
+            case "byte": return (T) Byte.valueOf((byte) 0);
             default: return null;
         }
     }
