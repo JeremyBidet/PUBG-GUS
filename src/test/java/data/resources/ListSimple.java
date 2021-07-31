@@ -3,17 +3,20 @@ package fr.whyt.pubg.data.resources;
 import fr.whyt.pubg.inifile.annotations.IniProperty;
 import fr.whyt.pubg.inifile.annotations.IniWrapper;
 import fr.whyt.pubg.inifile.core.IniPropertyWrapper;
+import fr.whyt.pubg.utils.ClassHelper;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSimple {
+@IniWrapper(IniPropertyWrapper.PARENTHESIS)
+public class ListSimple extends ClassHelper implements Serializable {
 	
-	@IniProperty
+	@IniProperty(order = 1)
 	@IniWrapper(IniPropertyWrapper.BRACKET)
 	public List<Integer> bracketIntList;
 	
-	@IniProperty
+	@IniProperty(order = 2)
 	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
 	public List<String> parenthesisStringList;
 	

@@ -14,54 +14,54 @@ import java.util.Objects;
 @IniWrapper(IniPropertyWrapper.PARENTHESIS)
 public class Inline extends ClassHelper implements Serializable {
 	
-	@IniProperty
+	@IniProperty(order = 1)
 	public int integer;
 	
-	@IniProperty(name = "int")
+	@IniProperty(name = "int", order = 2)
 	public int integerRenamed;
 	
-	@IniProperty(name = "intF", format = "%4d")
+	@IniProperty(name = "intF", format = "%4d", order = 3)
 	public int integerFormatted;
 	
-	@IniProperty(name = "intP", format = "%4d", pattern = "\\d{4}")
+	@IniProperty(name = "intP", format = "%4d", pattern = "\\d{4}", order = 4)
 	public int integerPattern;
 	
-	@IniProperty
+	@IniProperty(order = 5)
 	public String string;
 	
-	@IniProperty(name = "raw", raw = true)
+	@IniProperty(name = "raw", raw = true, order = 6)
 	public String stringRaw;
 	
-	@IniProperty(name = "strOptDef", optional = true)
+	@IniProperty(name = "strOptDef", optional = true, order = 7)
 	public String stringOptionalDefault;
 	
-	@IniProperty(name = "strOptEmpty", optional = true)
+	@IniProperty(name = "strOptEmpty", optional = true, order = 8)
 	@IniOptional(IniOptionalValue.STRING_EMPTY)
 	public String stringOptionalEmpty;
 	
-	@IniProperty
+	@IniProperty(order = 9)
 	public boolean bool;
 	
-	@IniProperty(name = "boolOptFalse", optional = true)
+	@IniProperty(name = "boolOptFalse", optional = true, order = 10)
 	@IniOptional(IniOptionalValue.BOOLEAN_FALSE)
 	public boolean boolOptionalFalse;
 	
 	static { IniOptionalValue.customize(IniOptionalValue.BOOLEAN, true); }
-	@IniProperty(name = "boolOptCustomTrue", optional = true)
+	@IniProperty(name = "boolOptCustomTrue", optional = true, order = 11)
 	@IniOptional(IniOptionalValue.BOOLEAN)
 	public boolean boolOptionalCustomTrue;
 	
-	@IniProperty
+	@IniProperty(order = 12)
 	public Brace brace;
 	
-	@IniProperty
+	@IniProperty(order = 13)
 	public Parenthesis parenthesis;
 	
-	@IniProperty(name = "bracketList")
+	@IniProperty(name = "bracketList", order = 14)
 	@IniWrapper(IniPropertyWrapper.BRACKET)
 	public List<Integer> intListWrappedWithBracket;
 	
-	@IniProperty(name = "parenthesisList")
+	@IniProperty(name = "parenthesisList", order = 15)
 	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
 	public List<Parenthesis> parenthesisListWrappedWithParentheses;
 	
