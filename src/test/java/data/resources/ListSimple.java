@@ -12,11 +12,11 @@ import java.util.Objects;
 @IniWrapper(IniPropertyWrapper.PARENTHESIS)
 public class ListSimple extends ClassHelper implements Serializable {
 	
-	@IniProperty
+	@IniProperty(order = 1)
 	@IniWrapper(IniPropertyWrapper.BRACKET)
 	public List<Integer> bracketIntList;
 	
-	@IniProperty
+	@IniProperty(order = 2)
 	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
 	public List<String> parenthesisStringList;
 	

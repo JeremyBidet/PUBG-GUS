@@ -10,9 +10,10 @@ import java.io.Serializable;
 @IniWrapper(IniPropertyWrapper.PARENTHESIS)
 public class Parenthesis extends ClassHelper implements Serializable {
 	
-	@IniProperty
+	@IniProperty(order = 1)
 	public double decimal;
-	@IniProperty
+	
+	@IniProperty(order = 2)
 	public int precision;
 	
 	public Parenthesis(final double decimal, final int precision) {

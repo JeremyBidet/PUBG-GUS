@@ -413,6 +413,7 @@ public class IniFileMapper {
 		//noinspection UnnecessaryLocalVariable
 		final String data = Arrays.stream(object.getClass().getDeclaredFields())
 				.filter(f -> f.isAnnotationPresent(IniProperty.class))
+				.sorted(Comparator.comparingInt(f -> f.getAnnotation(IniProperty.class).order()))
 				.map(field -> {
 					final IniProperty iniProperty = field.getAnnotation(IniProperty.class);
 					final String name = StringUtils.isEmpty(iniProperty.name()) ? field.getName() : iniProperty.name();
@@ -559,6 +560,7 @@ public class IniFileMapper {
 	static <T> SortedMap<String, Field> getDeclaredIniProperties(final Class<T> type) {
 		return Arrays.stream(type.getDeclaredFields())
 				.filter(field -> field.isAnnotationPresent(IniProperty.class))
+				.sorted(Comparator.comparingInt(f -> f.getAnnotation(IniProperty.class).order()))
 				.collect(Collectors.toMap(
 						field -> {
 							final String name = field.getAnnotation(IniProperty.class).name();

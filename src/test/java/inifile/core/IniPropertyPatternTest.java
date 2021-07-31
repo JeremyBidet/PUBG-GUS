@@ -10,9 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -580,56 +578,89 @@ public class IniPropertyPatternTest {
 	}
 	
 	@ParameterizedTest
-	@MethodSource("globalObjectProvider")
-	public void test(final Class clazz, final Serializable object, final String asString) throws IOException, ClassNotFoundException {
+	@MethodSource("globalObjectPatternProvider")
+	public void testPatternMatch(final String name, final Serializable object, final String regex, final String asString, final String... valuesExpected) {
 		// given
-		final Serializable deserializedProvided = object;
-		final String serializedProvided = asString;
+		final Pattern patternProvided = Pattern.compile(regex);
 		
 		// expected
-		final Serializable deserializedExpected = object;
-		final String serializedExpected = asString;
+		final String fullExpected = asString;
 		
 		// actual
-		final Object deserializedActual = IniFileMapper.deserialize(Path.of(serializedProvided), clazz);
-		final String serializedActual = IniFileMapper.serialize(deserializedProvided);
+		final Matcher matcherActual = patternProvided.matcher(asString);
 		
 		// assert
-		Assertions.assertEquals(deserializedExpected, deserializedActual);
-		Assertions.assertEquals(serializedExpected, serializedActual);
+		Assertions.assertTrue(matcherActual.matches());
+		
+		Assertions.assertEquals(fullExpected, matcherActual.group());
+		Assertions.assertEquals(fullExpected, matcherActual.group(0));
+		
+		for(int i = 0; i < valuesExpected.length; i++) {
+			Assertions.assertEquals(valuesExpected[i], matcherActual.group(i+1));
+		}
 	}
 	
-	private static Stream<Arguments> globalObjectProvider() {
+	@ParameterizedTest
+	@MethodSource("globalObjectPatternProvider")
+	public void testBuildPattern(final String name, final Serializable object, final String regex, final String asString, final String... valuesExpected) {
+		// given
+		final Serializable provided = object;
+		/*
+		final Root rootProvided = new Root(1, 1, 1, 1,
+				"str", "raw", "strOpt",
+				true, true, true,
+				new Brace('a'), new Parenthesis(1.0, 1),
+				List.of(1, 2, 3),
+				List.of(new Parenthesis(1.0, 1), new Parenthesis(2.01, 2)));
+		 */
+		
+		// expected
+		final Pattern patternExpected = Pattern.compile(regex);
+		
+		// actual
+		final Pattern patternActual = IniPropertyPattern.buildPattern(object.getClass());
+		
+		// assert
+		Assertions.assertEquals(patternExpected.pattern(), patternActual.pattern());
+		
+	}
+	
+	private static Stream<Arguments> globalObjectPatternProvider() {
 		return Stream.of(
-				Arguments.of(
-						Brace.class,
+				Arguments.of("Brace",
 						new Brace('a'),
-						"{character=a}"
+						"\\{character=((?:" + IniPropertyPattern.CHARACTER + "))\\}",
+						"{character=a}",
+						new String[] {"a"}
 				),
-				Arguments.of(
-						Parenthesis.class,
+				Arguments.of("Parenthesis",
 						new Parenthesis(1.0, 1),
-						"(decimal=1.0,precision=1)"
+						"\\(decimal=((?:" + IniPropertyPattern.DOUBLE + ")),precision=((?:" + IniPropertyPattern.INTEGER + "))\\)",
+						"(decimal=1.0,precision=1)",
+						new String[] {"1.0", "1"}
 				),
-				Arguments.of(
-						ObjectNested.class,
+				Arguments.of("ObjectNested",
 						new ObjectNested(
 								new ObjectNested.Level1(
 										new ObjectNested.Level2(
 												new ObjectNested.Level3(1)))),
-						"{level1=(level2=(level3={integer=1}))}"
+						"\\{level1=(\\(level2=(\\(level3=(\\{integer=((?:" + IniPropertyPattern.INTEGER + "))\\})\\))\\))\\}",
+						"{level1=(level2=(level3={integer=1}))}",
+						new String[] {"(level2=(level3={integer=1}))", "(level3={integer=1})", "{integer=1}", "1"}
 				),
-				Arguments.of(
-						ListSimple.class,
+				Arguments.of("SimpleList",
 						new ListSimple(
 								List.of(1, 2, 3),
 								List.of("str1", "str2")),
-						"(bracketIntList=[1,2,3],parenthesisStringList=(\"str1\",\"str2\"))"
+						"\\(bracketIntList=(\\[((?:(?:" + IniPropertyPattern.INTEGER + ")(?:,(?:" + IniPropertyPattern.INTEGER + "))*)?)\\]),parenthesisStringList=(\\(((?:(?:" + IniPropertyPattern.DOUBLE_QUOTED_STRING + ")(?:,(?:" + IniPropertyPattern.DOUBLE_QUOTED_STRING + "))*)?)\\))\\)",
+						"(bracketIntList=[1,2,3],parenthesisStringList=(\"str1\",\"str2\"))",
+						new String[] {"[1,2,3]", "1,2,3", "(\"str1\",\"str2\")", "\"str1\",\"str2\""}
 				),
-				Arguments.of(
-						ListComplex.class,
+				Arguments.of("ListComplex",
 						new ListComplex(List.of(Set.of(1, 2, 3), Set.of(4, 5, 6))),
-						"(bracketIntListList=([1,2,3],[4,5,6]))"
+						"\\(bracketIntListList=(\\(((?:(\\[((?:(?:" + IniPropertyPattern.INTEGER + ")(?:,(?:" + IniPropertyPattern.INTEGER + "))*)?)\\])(?:," + "(\\[((?:(?:" + IniPropertyPattern.INTEGER + ")(?:,(?:" + IniPropertyPattern.INTEGER + "))*)?)\\]))*)?)\\))\\)",
+						"(bracketIntListList=([1,2,3],[4,5,6]))",
+						new String[] {"([1,2,3],[4,5,6])", "[1,2,3],[4,5,6]"}
 				)
 		);
 	}
