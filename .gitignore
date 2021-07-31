@@ -80,3 +80,6 @@ atlassian-ide-plugin.xml
 
 # Editor-based Rest Client
 .idea/httpRequests
+
+# Android
+.idea/runConfigurations.xml
