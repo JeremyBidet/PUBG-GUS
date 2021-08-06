@@ -3,14 +3,12 @@ package fr.whyt.pubg.data.resources;
 import fr.whyt.pubg.inifile.annotations.IniProperty;
 import fr.whyt.pubg.inifile.annotations.IniWrapper;
 import fr.whyt.pubg.inifile.core.IniPropertyWrapper;
-import fr.whyt.pubg.utils.ClassHelper;
 
 import java.io.Serializable;
 
 @IniWrapper(IniPropertyWrapper.BRACE)
-public class ObjectNested extends ClassHelper implements Serializable {
+public class ObjectNested implements Serializable {
 	
-	@IniProperty
 	public Level1 level1;
 	
 	public ObjectNested(final Level1 level1) {
@@ -27,7 +25,7 @@ public class ObjectNested extends ClassHelper implements Serializable {
 	}
 
 	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
-	public static class Level1 extends ClassHelper implements Serializable {
+	public static class Level1 {
 		@IniProperty
 		public Level2 level2;
 		
@@ -46,7 +44,7 @@ public class ObjectNested extends ClassHelper implements Serializable {
 	}
 	
 	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
-	public static class Level2 extends ClassHelper implements Serializable {
+	public static class Level2 {
 		@IniProperty
 		public Level3 level3;
 		
@@ -65,7 +63,7 @@ public class ObjectNested extends ClassHelper implements Serializable {
 	}
 	
 	@IniWrapper(IniPropertyWrapper.BRACE)
-	public static class Level3 extends ClassHelper implements Serializable {
+	public static class Level3 {
 		@IniProperty
 		public int integer;
 		

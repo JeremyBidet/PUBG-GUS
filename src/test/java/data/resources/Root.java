@@ -15,50 +15,50 @@ import java.util.Objects;
 @IniRoot
 public class Root extends ClassHelper implements Serializable {
 	
-	@IniProperty(order = 1)
+	@IniProperty
 	public int integer;
 	
-	@IniProperty(name = "int", order = 2)
+	@IniProperty(name = "int")
 	public int integerRenamed;
 	
-	@IniProperty(format = "%4d", order = 3)
+	@IniProperty(format = "%4d")
 	public int integerFormatted;
 	
-	@IniProperty(format = "%4d", pattern = "\\d{4}", order = 4)
+	@IniProperty(format = "%4d", pattern = "\\d{4}")
 	public int integerPattern;
 	
-	@IniProperty(order = 5)
+	@IniProperty
 	public String string;
 	
-	@IniProperty(raw = true, order = 6)
+	@IniProperty(raw = true)
 	public String stringRaw;
 	
-	@IniProperty(optional = true, order = 7)
+	@IniProperty(optional = true)
 	public String stringOptional;
 	
-	@IniProperty(order = 8)
+	@IniProperty
 	public boolean bool;
 	
 	static { IniOptionalValue.customize(IniOptionalValue.BOOLEAN, true); }
-	@IniProperty(optional = true, order = 9)
+	@IniProperty(optional = true)
 	@IniOptional(IniOptionalValue.BOOLEAN)
 	public boolean boolOptionalCustomTrue;
 	
-	@IniProperty(optional = true, order = 10)
+	@IniProperty(optional = true)
 	@IniOptional(IniOptionalValue.BOOLEAN_FALSE)
 	public boolean boolOptionalFalse;
 	
-	@IniProperty(order = 11)
+	@IniProperty
 	public Brace brace;
 	
-	@IniProperty(order = 12)
+	@IniProperty
 	public Parenthesis parenthesis;
 	
-	@IniProperty(order = 13)
+	@IniProperty
 	@IniWrapper(IniPropertyWrapper.BRACKET)
 	public List<Integer> intListWrappedWithBracket;
 	
-	@IniProperty(order = 14)
+	@IniProperty
 	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
 	public List<Parenthesis> parenthesisListWrappedWithParentheses;
 	

@@ -1,6 +1,5 @@
 package fr.whyt.pubg.inifile.core;
 
-import fr.whyt.pubg.data.resources.*;
 import fr.whyt.pubg.inifile.exceptions.ParsingException;
 import fr.whyt.pubg.utils.StringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -10,16 +9,14 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-@SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored", "unused", "UnnecessaryLocalVariable"})
+@SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored", "unused"})
 public class IniPropertyPatternTest {
 	
 	@Test
@@ -188,54 +185,6 @@ public class IniPropertyPatternTest {
 		Assertions.assertDoesNotThrow(actualExecutableProvider.apply(provided6));
 		Assertions.assertThrows(expected78Exception, actualExecutableProvider.apply(provided7), expected78Message);
 		Assertions.assertThrows(expected78Exception, actualExecutableProvider.apply(provided8), expected78Message);
-	}
-	
-	@Test
-	public void testCharacter() {
-		// given
-		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.CHARACTER);
-		final String provided1 = null;
-		final String provided2 = "";
-		final String provided3 = "";
-		final String provided4 = "\t";
-		final String provided5 = "a";
-		final String provided6 = "1";
-		final String provided7 = "&";
-		
-		// expected
-		final Class<ParsingException> expected1234Exception = ParsingException.class;
-		final String expected1234Message = "Cannot parse the value! The pattern does not match the value";
-		final char expected5 = 'a';
-		final char expected6 = '1';
-		final char expected7 = '&';
-		
-		// actual
-		final Function<String, Executable> actualExecutableProvider = (provided) -> () -> {
-			if (StringUtils.isEmpty(provided) || !patternProvided.matcher(provided).matches()) {
-				throw new ParsingException(expected1234Message, provided, patternProvided.pattern());
-			}
-		};
-		
-		final Matcher matcherActual = patternProvided.matcher(provided5);
-		matcherActual.matches();
-		final int actual5 = matcherActual.group().charAt(0);
-		
-		matcherActual.reset(provided6);
-		matcherActual.matches();
-		final int actual6 = matcherActual.group().charAt(0);
-		
-		matcherActual.reset(provided7);
-		matcherActual.matches();
-		final int actual7 = matcherActual.group().charAt(0);
-		
-		// assert
-		Assertions.assertThrows(expected1234Exception, actualExecutableProvider.apply(provided1), expected1234Message);
-		Assertions.assertThrows(expected1234Exception, actualExecutableProvider.apply(provided2), expected1234Message);
-		Assertions.assertThrows(expected1234Exception, actualExecutableProvider.apply(provided3), expected1234Message);
-		Assertions.assertThrows(expected1234Exception, actualExecutableProvider.apply(provided4), expected1234Message);
-		Assertions.assertEquals(expected5, actual5);
-		Assertions.assertEquals(expected6, actual6);
-		Assertions.assertEquals(expected7, actual7);
 	}
 	
 	@Test
@@ -574,94 +523,6 @@ public class IniPropertyPatternTest {
 				// FIXME: the commented string should fail, but for an obscure reason the regex matches
 				Arguments.of(IniPropertyPattern.STRING, Arrays.asList(/*"\"abc\\\"$'_-\"",*/ "", null)),
 				Arguments.of(IniPropertyPattern.DOUBLE_QUOTED_STRING, Arrays.asList("\\\"grz\"'ééfé\\\"", "", null))
-		);
-	}
-	
-	@ParameterizedTest
-	@MethodSource("globalObjectPatternProvider")
-	public void testPatternMatch(final String name, final Serializable object, final String regex, final String asString, final String... valuesExpected) {
-		// given
-		final Pattern patternProvided = Pattern.compile(regex);
-		
-		// expected
-		final String fullExpected = asString;
-		
-		// actual
-		final Matcher matcherActual = patternProvided.matcher(asString);
-		
-		// assert
-		Assertions.assertTrue(matcherActual.matches());
-		
-		Assertions.assertEquals(fullExpected, matcherActual.group());
-		Assertions.assertEquals(fullExpected, matcherActual.group(0));
-		
-		for(int i = 0; i < valuesExpected.length; i++) {
-			Assertions.assertEquals(valuesExpected[i], matcherActual.group(i+1));
-		}
-	}
-	
-	@ParameterizedTest
-	@MethodSource("globalObjectPatternProvider")
-	public void testBuildPattern(final String name, final Serializable object, final String regex, final String asString, final String... valuesExpected) {
-		// given
-		final Serializable provided = object;
-		/*
-		final Root rootProvided = new Root(1, 1, 1, 1,
-				"str", "raw", "strOpt",
-				true, true, true,
-				new Brace('a'), new Parenthesis(1.0, 1),
-				List.of(1, 2, 3),
-				List.of(new Parenthesis(1.0, 1), new Parenthesis(2.01, 2)));
-		 */
-		
-		// expected
-		final Pattern patternExpected = Pattern.compile(regex);
-		
-		// actual
-		final Pattern patternActual = IniPropertyPattern.buildPattern(object.getClass());
-		
-		// assert
-		Assertions.assertEquals(patternExpected.pattern(), patternActual.pattern());
-		
-	}
-	
-	private static Stream<Arguments> globalObjectPatternProvider() {
-		return Stream.of(
-				Arguments.of("Brace",
-						new Brace('a'),
-						"\\{character=((?:" + IniPropertyPattern.CHARACTER + "))\\}",
-						"{character=a}",
-						new String[] {"a"}
-				),
-				Arguments.of("Parenthesis",
-						new Parenthesis(1.0, 1),
-						"\\(decimal=((?:" + IniPropertyPattern.DOUBLE + ")),precision=((?:" + IniPropertyPattern.INTEGER + "))\\)",
-						"(decimal=1.0,precision=1)",
-						new String[] {"1.0", "1"}
-				),
-				Arguments.of("ObjectNested",
-						new ObjectNested(
-								new ObjectNested.Level1(
-										new ObjectNested.Level2(
-												new ObjectNested.Level3(1)))),
-						"\\{level1=(\\(level2=(\\(level3=(\\{integer=((?:" + IniPropertyPattern.INTEGER + "))\\})\\))\\))\\}",
-						"{level1=(level2=(level3={integer=1}))}",
-						new String[] {"(level2=(level3={integer=1}))", "(level3={integer=1})", "{integer=1}", "1"}
-				),
-				Arguments.of("SimpleList",
-						new ListSimple(
-								List.of(1, 2, 3),
-								List.of("str1", "str2")),
-						"\\(bracketIntList=(\\[((?:(?:" + IniPropertyPattern.INTEGER + ")(?:,(?:" + IniPropertyPattern.INTEGER + "))*)?)\\]),parenthesisStringList=(\\(((?:(?:" + IniPropertyPattern.DOUBLE_QUOTED_STRING + ")(?:,(?:" + IniPropertyPattern.DOUBLE_QUOTED_STRING + "))*)?)\\))\\)",
-						"(bracketIntList=[1,2,3],parenthesisStringList=(\"str1\",\"str2\"))",
-						new String[] {"[1,2,3]", "1,2,3", "(\"str1\",\"str2\")", "\"str1\",\"str2\""}
-				),
-				Arguments.of("ListComplex",
-						new ListComplex(List.of(Set.of(1, 2, 3), Set.of(4, 5, 6))),
-						"\\(bracketIntListList=(\\(((?:(\\[((?:(?:" + IniPropertyPattern.INTEGER + ")(?:,(?:" + IniPropertyPattern.INTEGER + "))*)?)\\])(?:," + "(\\[((?:(?:" + IniPropertyPattern.INTEGER + ")(?:,(?:" + IniPropertyPattern.INTEGER + "))*)?)\\]))*)?)\\))\\)",
-						"(bracketIntListList=([1,2,3],[4,5,6]))",
-						new String[] {"([1,2,3],[4,5,6])", "[1,2,3],[4,5,6]"}
-				)
 		);
 	}
 	

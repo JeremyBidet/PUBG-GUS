@@ -30,12 +30,6 @@ public @interface IniProperty {
     String name() default "";
     
     /**
-     * Define the order of the property in the INI object.<br>
-     * @return the order of the property.
-     */
-    int order() default 0;
-    
-    /**
      * Tell if this property is optional.<br>
      * By default, if the property is optional and its value is null,
      * this property won't be parsed neither printed.<br>
