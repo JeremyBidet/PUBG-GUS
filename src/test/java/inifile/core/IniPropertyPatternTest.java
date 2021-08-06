@@ -1,5 +1,6 @@
 package fr.whyt.pubg.inifile.core;
 
+import fr.whyt.pubg.data.resources.*;
 import fr.whyt.pubg.inifile.exceptions.ParsingException;
 import fr.whyt.pubg.utils.StringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -9,14 +10,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
-@SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored", "unused"})
+@SuppressWarnings({"ConstantConditions", "ResultOfMethodCallIgnored", "unused", "UnnecessaryLocalVariable"})
 public class IniPropertyPatternTest {
 	
 	@Test
@@ -185,6 +190,54 @@ public class IniPropertyPatternTest {
 		Assertions.assertDoesNotThrow(actualExecutableProvider.apply(provided6));
 		Assertions.assertThrows(expected78Exception, actualExecutableProvider.apply(provided7), expected78Message);
 		Assertions.assertThrows(expected78Exception, actualExecutableProvider.apply(provided8), expected78Message);
+	}
+	
+	@Test
+	public void testCharacter() {
+		// given
+		final Pattern patternProvided = Pattern.compile(IniPropertyPattern.CHARACTER);
+		final String provided1 = null;
+		final String provided2 = "";
+		final String provided3 = "";
+		final String provided4 = "\t";
+		final String provided5 = "a";
+		final String provided6 = "1";
+		final String provided7 = "&";
+		
+		// expected
+		final Class<ParsingException> expected1234Exception = ParsingException.class;
+		final String expected1234Message = "Cannot parse the value! The pattern does not match the value";
+		final char expected5 = 'a';
+		final char expected6 = '1';
+		final char expected7 = '&';
+		
+		// actual
+		final Function<String, Executable> actualExecutableProvider = (provided) -> () -> {
+			if (StringUtils.isEmpty(provided) || !patternProvided.matcher(provided).matches()) {
+				throw new ParsingException(expected1234Message, provided, patternProvided.pattern());
+			}
+		};
+		
+		final Matcher matcherActual = patternProvided.matcher(provided5);
+		matcherActual.matches();
+		final int actual5 = matcherActual.group().charAt(0);
+		
+		matcherActual.reset(provided6);
+		matcherActual.matches();
+		final int actual6 = matcherActual.group().charAt(0);
+		
+		matcherActual.reset(provided7);
+		matcherActual.matches();
+		final int actual7 = matcherActual.group().charAt(0);
+		
+		// assert
+		Assertions.assertThrows(expected1234Exception, actualExecutableProvider.apply(provided1), expected1234Message);
+		Assertions.assertThrows(expected1234Exception, actualExecutableProvider.apply(provided2), expected1234Message);
+		Assertions.assertThrows(expected1234Exception, actualExecutableProvider.apply(provided3), expected1234Message);
+		Assertions.assertThrows(expected1234Exception, actualExecutableProvider.apply(provided4), expected1234Message);
+		Assertions.assertEquals(expected5, actual5);
+		Assertions.assertEquals(expected6, actual6);
+		Assertions.assertEquals(expected7, actual7);
 	}
 	
 	@Test
@@ -523,6 +576,61 @@ public class IniPropertyPatternTest {
 				// FIXME: the commented string should fail, but for an obscure reason the regex matches
 				Arguments.of(IniPropertyPattern.STRING, Arrays.asList(/*"\"abc\\\"$'_-\"",*/ "", null)),
 				Arguments.of(IniPropertyPattern.DOUBLE_QUOTED_STRING, Arrays.asList("\\\"grz\"'ééfé\\\"", "", null))
+		);
+	}
+	
+	@ParameterizedTest
+	@MethodSource("globalObjectProvider")
+	public void test(final Class clazz, final Serializable object, final String asString) throws IOException, ClassNotFoundException {
+		// given
+		final Serializable deserializedProvided = object;
+		final String serializedProvided = asString;
+		
+		// expected
+		final Serializable deserializedExpected = object;
+		final String serializedExpected = asString;
+		
+		// actual
+		final Object deserializedActual = IniFileMapper.deserialize(Path.of(serializedProvided), clazz);
+		final String serializedActual = IniFileMapper.serialize(deserializedProvided);
+		
+		// assert
+		Assertions.assertEquals(deserializedExpected, deserializedActual);
+		Assertions.assertEquals(serializedExpected, serializedActual);
+	}
+	
+	private static Stream<Arguments> globalObjectProvider() {
+		return Stream.of(
+				Arguments.of(
+						Brace.class,
+						new Brace('a'),
+						"{character=a}"
+				),
+				Arguments.of(
+						Parenthesis.class,
+						new Parenthesis(1.0, 1),
+						"(decimal=1.0,precision=1)"
+				),
+				Arguments.of(
+						ObjectNested.class,
+						new ObjectNested(
+								new ObjectNested.Level1(
+										new ObjectNested.Level2(
+												new ObjectNested.Level3(1)))),
+						"{level1=(level2=(level3={integer=1}))}"
+				),
+				Arguments.of(
+						ListSimple.class,
+						new ListSimple(
+								List.of(1, 2, 3),
+								List.of("str1", "str2")),
+						"(bracketIntList=[1,2,3],parenthesisStringList=(\"str1\",\"str2\"))"
+				),
+				Arguments.of(
+						ListComplex.class,
+						new ListComplex(List.of(Set.of(1, 2, 3), Set.of(4, 5, 6))),
+						"(bracketIntListList=([1,2,3],[4,5,6]))"
+				)
 		);
 	}
 	

@@ -17,10 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -41,8 +38,8 @@ import java.util.stream.StreamSupport;
  */
 public class IniFileMapper {
 	
-	private static final IniPropertyWrapper DEFAULT_LIST_WRAPPER = IniPropertyWrapper.BRACKET;
-	private static final IniPropertyWrapper DEFAULT_OBJECT_WRAPPER = IniPropertyWrapper.PARENTHESIS;
+	static final IniPropertyWrapper DEFAULT_LIST_WRAPPER = IniPropertyWrapper.BRACKET;
+	static final IniPropertyWrapper DEFAULT_OBJECT_WRAPPER = IniPropertyWrapper.PARENTHESIS;
 	
 	// DESERIALIZER
 	
@@ -77,15 +74,7 @@ public class IniFileMapper {
 			return null;
 		}
 		
-		final Map<String, Field> declaredPropertyFields = Arrays.stream(type.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(IniProperty.class))
-                .collect(Collectors.toMap(
-		                field -> {
-                			final String name = field.getAnnotation(IniProperty.class).name();
-                			return StringUtils.isEmpty(name) ? field.getName() : name;
-                        },
-		                Function.identity())
-                );
+		final SortedMap<String, Field> declaredPropertyFields = getDeclaredIniProperties(type);
 		
 		final T object;
 		try {
@@ -222,11 +211,10 @@ public class IniFileMapper {
 	 * @throws ParsingException       when error occurred while deserializing the iterable
 	 * @return the deserialized INI list.
 	 */
-	private static <T extends Collection<U>, U>
-			Collection<U> deserializeIterable(final Field field,
-			                                  final Class<T> iterableType,
-			                                  final Class<U> elementType,
-			                                  final String rawValue)
+	private static <T extends Collection<U>, U> Collection<U> deserializeIterable(final Field field,
+	                                                                              final Class<T> iterableType,
+	                                                                              final Class<U> elementType,
+	                                                                              final String rawValue)
 			throws ParsingException, ClassNotFoundException {
 		final Collection<U> values = ClassUtils.newCollection(iterableType);
 		
@@ -321,15 +309,7 @@ public class IniFileMapper {
 		
 		final String valueStart = rawValue.substring(1);
 		
-		final Map<String, Field> declaredPropertyFields = Arrays.stream(objectType.getDeclaredFields())
-				.filter(field -> field.isAnnotationPresent(IniProperty.class))
-                .collect(Collectors.toMap(
-                		field -> {
-                			final String name = field.getAnnotation(IniProperty.class).name();
-                			return StringUtils.isEmpty(name) ? field.getName() : name;
-                        },
-		                Function.identity())
-                );
+		final SortedMap<String, Field> declaredPropertyFields = getDeclaredIniProperties(objectType);
 		
 		final T object;
 		try {
@@ -560,4 +540,33 @@ public class IniFileMapper {
 		return !ignoreWrapper && Arrays.stream(IniPropertyWrapper.values()).anyMatch(wrapper -> wrapper.tail == c);
 	}
 	
+	
+	// UTILS
+	
+	/**
+	 * Create a sorted map with all {@linkplain Class#getDeclaredFields() declared fields}
+	 * annotated with the {@link IniProperty} annotation.<br>
+	 * The fields are sorted according to their declaration order into the class.<br>
+	 * <br>
+	 * Each {@link Field} will be associated with its matching {@code property name} (in an INI file).<br>
+	 * The {@code property name} is determined by the {@link IniProperty#name()} property, if any,
+	 * or by the {@linkplain Field#getName() name} otherwise (default).<br>
+	 * <br>
+	 * @param type the INI object class type to extract properties
+	 * @param <T> the INI object type
+	 * @return the sorted map as described above
+	 */
+	static <T> SortedMap<String, Field> getDeclaredIniProperties(final Class<T> type) {
+		return Arrays.stream(type.getDeclaredFields())
+				.filter(field -> field.isAnnotationPresent(IniProperty.class))
+				.collect(Collectors.toMap(
+						field -> {
+							final String name = field.getAnnotation(IniProperty.class).name();
+							return StringUtils.isEmpty(name) ? field.getName() : name;
+						},
+						Function.identity(),
+						(oldValue, newValue) -> newValue,
+						TreeMap::new)
+				);
+	}
 }

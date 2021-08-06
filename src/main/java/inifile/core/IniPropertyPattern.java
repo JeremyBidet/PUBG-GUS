@@ -21,6 +21,10 @@ public class IniPropertyPattern {
 	 */
 	public static final String INTEGER = "-?\\d+";
 	/**
+	 * every characters excepted spaces
+	 */
+	public static final String CHARACTER = "[^\\s]";
+	/**
 	 * abc-DEF_012
 	 */
 	public static final String WORD = "[a-zA-Z][\\w\\-]*";
@@ -30,7 +34,7 @@ public class IniPropertyPattern {
 	 * <br>
 	 * Note: in Java double quote is already escaped in strings {@code \"}, so please use double escape {@code \\\"}
 	 */
-	public static final String STRING = "(?:\\\"|[^\"\r\n])+";
+	public static final String STRING = "(?:\\\"|[^\"\\r\\n])+";
 	/**
 	 * Like {@linkplain IniPropertyPattern#WORD WORD} but with enclosing double quote {@code "word"}.
 	 */

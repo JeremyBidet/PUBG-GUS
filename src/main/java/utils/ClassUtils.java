@@ -267,5 +267,4 @@ public class ClassUtils {
         return object.getClass().isArray() || iterables.stream().anyMatch(t -> t.isInstance(object));
     }
     
-    
 }

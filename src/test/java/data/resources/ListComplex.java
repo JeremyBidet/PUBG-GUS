@@ -3,17 +3,21 @@ package fr.whyt.pubg.data.resources;
 import fr.whyt.pubg.inifile.annotations.IniProperty;
 import fr.whyt.pubg.inifile.annotations.IniWrapper;
 import fr.whyt.pubg.inifile.core.IniPropertyWrapper;
+import fr.whyt.pubg.utils.ClassHelper;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
-public class ListComplex {
+@IniWrapper(IniPropertyWrapper.PARENTHESIS)
+public class ListComplex extends ClassHelper implements Serializable {
 	
 	@IniProperty
 	@IniWrapper(IniPropertyWrapper.BRACKET)
-	public List<List<Integer>> bracketIntListList;
+	public List<Set<Integer>> bracketIntListList;
 	
-	public ListComplex(final List<List<Integer>> bracketIntListList) {
+	public ListComplex(final List<Set<Integer>> bracketIntListList) {
 		this.bracketIntListList = bracketIntListList;
 	}
 	@SuppressWarnings("unused") public ListComplex() {}
