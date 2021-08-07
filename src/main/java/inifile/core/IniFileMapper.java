@@ -289,6 +289,9 @@ public class IniFileMapper {
 	private static <T> T deserializeObject(final Class<T> objectType,
 	                                       final String rawValue)
 			throws ClassNotFoundException, ParsingException {
+		if (objectType == null) {
+			throw new ClassNotFoundException("Please provide a class implementing Serializable!");
+		}
 		if (Arrays.stream(objectType.getInterfaces()).noneMatch(i -> i.equals(Serializable.class))) {
 			throw new ClassNotFoundException("This class should implements Serializable!");
 		}
@@ -305,6 +308,10 @@ public class IniFileMapper {
 		
 		if (rawValue.equals("" + wrapper.head + wrapper.tail)) {
 			throw new ParsingException("Empty objects are not authorized", rawValue, null);
+		}
+		
+		if (rawValue.charAt(0) != wrapper.head || rawValue.charAt(rawValue.length()-1) != wrapper.tail) {
+			throw new ParsingException("Unrecognized wrapper characters", rawValue, wrapper.head + "..." + wrapper.tail);
 		}
 		
 		final String valueStart = rawValue.substring(1);

@@ -4,6 +4,7 @@ import fr.whyt.pubg.data.resources.*;
 import fr.whyt.pubg.inifile.exceptions.ParsingException;
 import fr.whyt.pubg.utils.StringUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -579,6 +580,7 @@ public class IniPropertyPatternTest {
 		);
 	}
 	
+	@Disabled
 	@ParameterizedTest
 	@MethodSource("globalObjectProvider")
 	public void test(final Class clazz, final Serializable object, final String asString) throws IOException, ClassNotFoundException {
