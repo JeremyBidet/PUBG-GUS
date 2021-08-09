@@ -115,7 +115,7 @@ public class ClassUtils {
         
         switch (type.getSimpleName()) {
             // primitive boxed type
-            case "String":      return type.cast(StringUtils.removeEnclosingQuotes(value));
+            case "String":      return type.cast(value);
             case "Integer":     return type.cast(Integer.valueOf(value));
             case "int":         return (T) Integer.valueOf(value);
             case "Long":        return type.cast(Long.valueOf(value));

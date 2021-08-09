@@ -152,7 +152,7 @@ public class IniFileMapper {
 			if (!raw) {
 				value = StringUtils.removeEnclosingQuotes(rawValue);
 			} else {
-				if (!StringUtils.hasEnclosingQuotes(rawValue)) {
+				if (StringUtils.hasEnclosingQuotes(rawValue)) {
 					throw new ParsingException("Cannot parse the value! It should be a raw string and there are enclosing quotes.", rawValue, IniPropertyPattern.STRING);
 				}
 			}
@@ -286,8 +286,7 @@ public class IniFileMapper {
 	 * @throws ParsingException       when error occurred while deserializing the object
 	 * @return the deserialized INI object.
 	 */
-	private static <T> T deserializeObject(final Class<T> objectType,
-	                                       final String rawValue)
+	private static <T> T deserializeObject(final Class<T> objectType, final String rawValue)
 			throws ClassNotFoundException, ParsingException {
 		if (objectType == null) {
 			throw new ClassNotFoundException("Please provide a class implementing Serializable!");
@@ -345,12 +344,8 @@ public class IniFileMapper {
 			if (isCloseWrapper(c, isInQuotedString)) {
 				cpt--;
 			}
-			// if object end has been reached
-			if (cpt == 0) {
-				return object;
-			}
-			// if object member separator has been reached, only at the first level of the object
-			if (c == IniPropertyPattern.object_key_value_separator && cpt == 1) {
+			// if object end or member separator has been reached, only at the first level of the object
+			if (cpt == 0 || (c == IniPropertyPattern.object_key_value_separator && cpt == 1)) {
 				final String key_value = stringBuilder.toString();
 				final Matcher matcher = IniPropertyPattern.key_value_pattern_named.matcher(key_value);
 				

@@ -6,6 +6,7 @@ import fr.whyt.pubg.inifile.core.IniPropertyWrapper;
 import fr.whyt.pubg.utils.ClassHelper;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @IniWrapper(IniPropertyWrapper.BRACE)
 public class ObjectNested extends ClassHelper implements Serializable {
@@ -23,7 +24,7 @@ public class ObjectNested extends ClassHelper implements Serializable {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		final ObjectNested objectNested = (ObjectNested) o;
-		return level1 == objectNested.level1;
+		return Objects.equals(level1, objectNested.level1);
 	}
 
 	@IniWrapper(IniPropertyWrapper.PARENTHESIS)
@@ -41,7 +42,7 @@ public class ObjectNested extends ClassHelper implements Serializable {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
 			final Level1 level1 = (Level1) o;
-			return level2 == level1.level2;
+			return Objects.equals(level2, level1.level2);
 		}
 	}
 	
@@ -60,7 +61,7 @@ public class ObjectNested extends ClassHelper implements Serializable {
 			if (this == o) return true;
 			if (o == null || getClass() != o.getClass()) return false;
 			final Level2 level2 = (Level2) o;
-			return level3 == level2.level3;
+			return Objects.equals(level3, level2.level3);
 		}
 	}
 	

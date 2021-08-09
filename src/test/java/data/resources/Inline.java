@@ -106,8 +106,8 @@ public class Inline extends ClassHelper implements Serializable {
 				       && boolOptionalCustomTrue == inline.boolOptionalCustomTrue
 				       && Objects.equals(brace, inline.brace)
 				       && Objects.equals(parenthesis, inline.parenthesis)
-				       && Objects.equals(intListWrappedWithBracket, inline.intListWrappedWithBracket)
-				       && Objects.equals(parenthesisListWrappedWithParentheses, inline.parenthesisListWrappedWithParentheses);
+				       && Objects.deepEquals(intListWrappedWithBracket, inline.intListWrappedWithBracket)
+				       && Objects.deepEquals(parenthesisListWrappedWithParentheses, inline.parenthesisListWrappedWithParentheses);
 	}
 	
 }

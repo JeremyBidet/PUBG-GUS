@@ -226,11 +226,11 @@ public class IniFileMapperPrivateTest {
 						Inline.class,
 						new Inline(1, 2, 3, 4, "quoted", "raw", "test", "test", true, true, false, new Brace('a'), new Parenthesis(1.0, 1), List.of(1, 2, 3), List.of(new Parenthesis(1.0, 1), new Parenthesis(2.10, 2), new Parenthesis(-3.001, 3))),
 						null, null),
-				// integerPattern no matches
+				// intP no matches
 				Arguments.of("(integer=1,int=2,intF=3,intP=4,string=\"quoted\",raw=raw,strOptDef=\"test\",strOptEmpty=\"test\",bool=true,boolOptFalse=true,boolOptCustomTrue=False,brace={character=a},parenthesis=(decimal=1.0,precision=1),bracketList=[1,2,3],parenthesisList=((decimal=1.0,precision=1),(decimal=2.10,precision=2),(decimal=-3.001,precision=3)))",
 						Inline.class,
 						new Inline(1, 2, 3, INTEGER_NULL, "quoted", "raw", "test", "test", true, true, false, new Brace('a'), new Parenthesis(1.0, 1), List.of(1, 2, 3), List.of(new Parenthesis(1.0, 1), new Parenthesis(2.10, 2), new Parenthesis(-3.001, 3))),
-						null, null),
+						ParsingException.class, "Cannot parse the value! The pattern does not match the value"),
 				// string empty
 				Arguments.of("(integer=1,int=2,intF=3,intP=0004,string=\"\",raw=raw,strOptDef=\"test\",strOptEmpty=\"test\",bool=false,boolOptFalse=true,boolOptCustomTrue=False,brace={character=a},parenthesis=(decimal=1.0,precision=1),bracketList=[1,2,3],parenthesisList=((decimal=1.0,precision=1),(decimal=2.10,precision=2),(decimal=-3.001,precision=3)))",
 						Inline.class,
@@ -240,7 +240,7 @@ public class IniFileMapperPrivateTest {
 				Arguments.of("(integer=1,int=2,intF=3,intP=0004,string=\"quoted\",raw=\"raw\",strOptDef=\"test\",strOptEmpty=\"test\",bool=False,boolOptFalse=true,boolOptCustomTrue=False,brace={character=a},parenthesis=(decimal=1.0,precision=1),bracketList=[1,2,3],parenthesisList=((decimal=1.0,precision=1),(decimal=2.10,precision=2),(decimal=-3.001,precision=3)))",
 						Inline.class,
 						new Inline(1, 2, 3, 4, "quoted", STRING_NULL, "test", "test", true, true, false, new Brace('a'), new Parenthesis(1.0, 1), List.of(1, 2, 3), List.of(new Parenthesis(1.0, 1), new Parenthesis(2.10, 2), new Parenthesis(-3.001, 3))),
-						null, null),
+						ParsingException.class, "Cannot parse the value! It should be a raw string and there are enclosing quotes."),
 				// strOptDef omitted
 				Arguments.of("(integer=1,int=2,intF=3,intP=0004,string=\"quoted\",raw=raw,strOptEmpty=\"test\",bool=true,boolOptFalse=true,boolOptCustomTrue=False,brace={character=a},parenthesis=(decimal=1.0,precision=1),bracketList=[1,2,3],parenthesisList=((decimal=1.0,precision=1),(decimal=2.10,precision=2),(decimal=-3.001,precision=3)))",
 						Inline.class,
